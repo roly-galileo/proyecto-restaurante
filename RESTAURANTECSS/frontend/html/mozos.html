@@ -1,16 +1,65 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel de mozos</title>
+    <title>Panel del Mozo</title>
+    <link rel="stylesheet" href="mozo.css">
 </head>
 <body>
-    <h2>
-        
-    </h2>
-    <div>
 
-    </div>  
+<div class="container">
+
+    <h1>PANEL DEL MOZO</h1>
+
+    <!-- CLIENTE -->
+    <section class="card">
+        <h2>Buscar Cliente</h2>
+        <input type="text" id="usuario" placeholder="Usuario registrado">
+        <button onclick="buscarCliente()">Buscar</button>
+
+        <label class="checkbox">
+            <input type="checkbox" id="ocasional">
+            Cliente ocasional
+        </label>
+    </section>
+
+    <!-- PEDIDO -->
+    <section class="card">
+        <h2>Tomar Pedido</h2>
+
+        <input type="text" id="plato" placeholder="Plato">
+        <input type="text" id="bebida" placeholder="Bebida">
+        <input type="number" id="cantidad" placeholder="Cantidad" min="1">
+        <br><br>
+
+        <textarea id="observaciones" placeholder="Observaciones"></textarea>
+        <br><br>
+
+        <button onclick="agregarPedido('para llevar')">Para llevar</button>
+
+        <label for="mesa">Mesa:</label>
+        <select id="mesa">
+            <option value="">Seleccionar mesa</option>
+            <option value="Mesa 1">Mesa 1</option>
+            <option value="Mesa 2">Mesa 2</option>
+            <option value="Mesa 3">Mesa 3</option>
+            <option value="Mesa 4">Mesa 4</option>
+        </select>
+        <button onclick="agregarPedido('mesa')">Asignar a mesa</button>
+    </section>
+
+    <!-- LISTA -->
+    <section class="card">
+        <h2>Lista de pedidos</h2>
+        <ul id="listaPedidos"></ul>
+
+        <button class="enviar" onclick="enviarPedido()">
+            ENVIAR PEDIDO A COCINA
+        </button>
+    </section>
+
+</div>
+
+<script src="mozo.js"></script>
 </body>
 </html>
