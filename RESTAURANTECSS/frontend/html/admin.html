@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <!-- Configuración de codificación de caracteres -->
+    <meta charset="UTF-8">
+
+    <!-- Título de la página que aparece en la pestaña del navegador -->
+    <title>Reservar Mesa</title>
+
+    <!-- Estilos CSS principales del sitio -->
+    <link rel="stylesheet" href="../css/styles.css">
+
+    <!-- Fuente externa Marcellus para títulos y textos destacados -->
+    <link href="https://fonts.googleapis.com/css2?family=Marcellus&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- ================= TÍTULO PRINCIPAL ================= -->
+    <h2>Ingresa a tu cuenta</h2>
+
+    <!-- ================= FORMULARIO DE LOGIN ================= -->
+    <form id="cuenta_id" class="contenedor">
+
+        <!-- Campo de DNI (número de documento) -->
+        <input
+            type="number" 
+            id="DNI" 
+            name="DNI"
+            placeholder="Ingresa tu DNI" 
+            min="1" 
+            required
+        >
+
+        <!-- Campo de correo electrónico -->
+        <input
+            type="email"
+            id="correo"
+            name="correo"
+            placeholder="Ingresa tu correo"
+            required
+        >
+
+        <!-- ================= CAMPO DE CONTRASEÑA CON VISIBILIDAD ================= -->
+        <div class="password-box">
+
+            <!-- Campo de contraseña -->
+            <input
+                type="password"
+                id="clave"
+                name="clave"
+                placeholder="Ingresa tu clave"
+                required
+            >
+
+            <!-- Ícono para mostrar/ocultar contraseña -->
+            <span id="toggleClave">👀</span>
+
+        </div>
+
+        <!-- Botón de envío del formulario -->
+        <button type="submit" name="accion" value="azar">
+            Ingresar
+        </button>
+
+    </form>
+
+    <!-- ================= SCRIPT DE VALIDACIÓN DEL LOGIN ================= -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+
+            const form = document.getElementById("cuenta_id");
+
+            // Evento submit del formulario
+            form.addEventListener("submit", function (e) {
+
+                e.preventDefault(); // Evita que se recargue la página al enviar
+
+                // Obtener valores de los inputs
+                const dni = document.getElementById("DNI").value;
+                const correo = document.getElementById("correo").value;
+                const clave = document.getElementById("clave").value;
+
+                // Validar campos vacíos
+                if (dni === "" || correo === "" || clave === "") {
+                    alert("Completa todos los campos");
+                    return;
+                }
+
+                // Mostrar datos en consola (solo para pruebas)
+                console.log("DNI:", dni);
+                console.log("Correo:", correo);
+                console.log("Clave:", clave);
+
+                // Simulación de login (solo ejemplo)
+                if (dni === "12345678" && clave === "1234") {
+                    alert("✅ Bienvenido");
+                    window.location.href = "inicio.html"; // Redirige a la página de inicio
+                } else {
+                    alert("❌ Datos incorrectos");
+                }
+
+            });
+
+        });
+    </script>
+
+    <!-- ================= SCRIPT PARA MOSTRAR/OCULTAR CONTRASEÑA ================= -->
+    <script>
+        const claveInput = document.getElementById("clave");
+        const toggle = document.getElementById("toggleClave");
+
+        // Evento click para alternar visibilidad de la contraseña
+        toggle.addEventListener("click", function () {
+
+            if (claveInput.type === "password") {
+                claveInput.type = "text";   // Mostrar contraseña
+                toggle.textContent = "🙈";   // Cambiar ícono
+            } else {
+                claveInput.type = "password"; // Ocultar contraseña
+                toggle.textContent = "👀";    // Cambiar ícono
+            }
+
+        });
+    </script>
+
+    <!-- Link repetido a estilos CSS (ya incluido en <head>, podría omitirse) -->
+    <link rel='stylesheet' href="styles.css">
+
+</body>
+</html>

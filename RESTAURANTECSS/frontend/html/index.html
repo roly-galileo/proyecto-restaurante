@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    
+    <!-- FUENTES EXTERNAS -->
+    <!-- Fuente Silent Script para títulos decorativos -->
+    <link href="https://fonts.googleapis.com/css2?family=Silent+Script&display=swap" rel="stylesheet">
+    
+    <!-- Archivo CSS principal del sitio -->
+    <link rel='stylesheet' href="../css/styles.css">
+    <link rel='stylesheet' href="../css/promos.css">
+    
+    <!-- Fuente Marcellus para textos destacados o secciones especiales -->
+    <link href="https://fonts.googleapis.com/css2?family=Marcellus&display=swap" rel="stylesheet">
+    
+    <!-- Título de la página que aparece en la pestaña del navegador -->
+    <title>MIPAGINA</title>
+</head>
+
+<body>
+    <div id="splash">
+     <img src="../img/img-removebg-preview.png">
+     <p>Cargando...</p>
+    </div>
+    <div  id="contenido">
+            <!-- ================= HEADER ================= -->
+    <!-- Barra superior con información de contacto y redes sociales -->
+    <header class="top-bar">
+        <p>
+            📞 ¡Llámanos hoy! al <strong>449 135</strong> &nbsp; | &nbsp;
+            ✉ administracion@saborcasero.pe
+        </p>
+
+        <!-- Iconos sociales con enlaces a Facebook, Instagram y Twitter -->
+        <div class="social-icons">
+            <a href="#"><img src="https://img.icons8.com/color/48/000000/facebook.png" alt="Facebook"></a>
+            <a href="#"><img src="https://img.icons8.com/color/48/000000/instagram.png" alt="Instagram"></a>
+            <a href="#"><img src="https://img.icons8.com/color/48/000000/twitter.png" alt="Twitter"></a>
+        </div>
+    </header>
+
+    <!-- ================= MENÚ PRINCIPAL ================= -->
+    <!-- Barra de navegación con enlaces a secciones del sitio -->
+    <nav class='menu-principal'>
+        <ul>
+            <li><a href='https://tantaperu.com/cartas/TNT_Carta.pdf'>Nuestra carta</a></li>
+            <li><a href='carta.html'>Te brindamos</a></li>
+            <li><a href='carta.html'>Sedes</a></li>
+            <li><a href='galeria.html'>Galeria</a></li>
+            <li><a href='carta.html'>Historia</a></li>
+            <li><a href='carta.html'>Contacto</a></li>
+            <!-- Botones especiales para reservas y administración -->
+            <li><a href='reservas.html' class="reserva-btn">Reservaciones</a></li>
+            <li><a href='admin.html' class="reserva-btn">Inicio de Sesion</a></li>
+            <li><a href='login.html' class="login-btn">Crear Cuenta</a></li>
+            <!--Boton para login de clientes-->
+            
+        </ul>
+    </nav>
+
+    <!-- ================= SECCIÓN HERO ================= -->
+    <!-- Presentación principal del sitio con título, descripción y botón -->
+    <section class="hero" id="hero">
+        <div class="overlay">
+            <h1>Sabor Casero</h1>
+            <p>Comida tradicional con el auténtico sabor a casa</p>
+            
+        </div>
+    </section>
+
+    <!-- ================= SECCIÓN DE PROMOCIONES ================= -->
+    <section class="seccion-destacada-promos">
+
+        <!-- Información descriptiva sobre las promociones -->
+        <div class="info-promos">
+            <h2>Promociones</h2>
+            <p>
+                Descubre nuestras promociones especiales, con los platos más queridos de Sabor Casero a precios que dan gusto. 
+                Disfruta recetas tradicionales, ingredientes frescos y ese auténtico sabor de casa… ¡ahora en combos y ofertas que no se pueden dejar pasar!
+            </p>
+        </div>
+
+        <!-- Carrusel de imágenes de promociones -->
+        <div class="carrusel">
+            <img src="img/promos1.png" class="slide active" alt="promo1">
+            <img src="img/promos2.jpg" class="slide" alt="promo2">
+            <img src="img/promos3.jpg" class="slide" alt="promo3">
+        </div>
+
+    </section>
+
+    <!-- ================= SECCIÓN DE PLATILLOS ================= -->
+    <section class="seccion-destacada">
+
+        <!-- Información descriptiva de los platillos destacados -->
+        <div class="info-platos">
+            <h2>Platillos</h2>
+            <p>
+                Descubre nuestros platos más queridos, preparados con ingredientes frescos,
+                recetas tradicionales y el auténtico sabor casero que nos caracteriza.
+            </p>
+        </div>
+
+        <!-- Carrusel de imágenes de platillos -->
+        <div class="carrusel">
+            <img src="img/lomo.jpg" class="slide active" alt="Lomo Saltado">
+            <img src="img/aji.jpg" class="slide" alt="Ají de Gallina">
+            <img src="img/causa.jpg" class="slide" alt="Arroz con Pollo">
+        </div>
+    </section>
+
+    <!-- ================= SECCIÓN DE TRABAJADORES ================= -->
+    <section class="seccion-destacada-trab">
+
+        <!-- Información sobre los trabajadores -->
+        <div class="info-trab">
+            <h2>Trabajadores</h2>
+            <p>
+                Descubre nuestras promociones especiales, con los platos más queridos de Sabor Casero a precios que dan gusto. 
+                Disfruta recetas tradicionales, ingredientes frescos y ese auténtico sabor de casa… ¡ahora en combos y ofertas que no se pueden dejar pasar!
+            </p>
+        </div>
+
+        <!-- Carrusel de imágenes de trabajadores -->
+        <div class="carrusel">
+            <img src="img/trabajadores1.jpg" class="slide active" alt="trab1">
+            <img src="img/trabajadores2.jpg" class="slide" alt="trab2">
+            <img src="img/trabajadores3.jpg" class="slide" alt="treab3">
+        </div>
+
+    </section>
+    
+    <!-- ================= BOTÓN DE PROMOCIONES ================= -->
+    <!-- Botón para mostrar promociones -->
+    <div id="promociones-boton">🥳</div>
+
+    <!-- ventana de las procione, inicialmente oculta -->
+     <div id="promociones-ventana" class="oculto">
+        <h3>Promociones</h3>
+
+        <!-- Promociones del restaurante  -->
+        <iframe
+            src="promos.html"
+            width="100%"
+            height="300"
+            style="border:0;"
+            loading="lazy">
+        </iframe>
+         <!-- funcionalidad del boton -->
+        <script>
+          const botonPromociones = document.getElementById("promociones-boton");
+          const ventanaPromociones = document.getElementById("promociones-ventana");
+            botonPromociones.addEventListener("click", () => {
+            ventanaPromociones.classList.toggle("oculto");
+            });
+        </script>
+    </div>
+
+    <!-- ================= BOTÓN Y VENTANA MAPA ================= -->
+    <!-- Botón para mostrar mapa -->
+    <div id="mapa-boton">📍</div>
+
+    <!-- Ventana del mapa, inicialmente oculta -->
+    <div id="mapa-ventana" class="oculto">
+        <h3>Nuestra ubicación</h3>
+
+        <!-- Mapa embebido de Google Maps -->
+        <iframe
+            src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3866.653444037519!2d-71.226719!3d-14.2734218!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x91692b3cabf28c27%3A0xbd007cb5cfe738c2!2sRESTAURANTE%20ANTIKA%20SICUANI!5e0!3m2!1ses!2spe!4v1770319364828!5m2!1ses!2spe"
+            width="100%"
+            height="300"
+            style="border:0;"
+            loading="lazy">
+        </iframe>
+    </div>
+
+    
+
+    <!-- ================= BOTÓN Y VENTANA DEL CHATBOT ================= -->
+    <div id="chat-boton"></div>
+    <div id="chat-ventana" class="oculto"></div>
+
+    <!-- ================= FOOTER ================= -->
+    <div id="chat-ventana" class="oculto">
+      
+    <!-- FOOTER CON SUS DESCRIPCIONES-->
+    </div>
+    <footer class="footer">
+        <div class="footer-contenido">
+
+            <!-- Columna 1: Logo y descripción -->
+            <div class="footer-col">
+                <h2 class="logo-footer">SABOR CASERO</h2>
+                <p>
+                    Sabor Casero es más que un restaurante, es un lugar donde la tradición,
+                    el buen sazón y la calidez de Sicuani se sienten en cada plato.
+                </p>
+
+                <!-- Redes sociales del footer -->
+                <div class="redes">
+                    <a href="#">Facebook</a>
+                    <a href="#">Instagram</a>
+                    <a href="#">TikTok</a>
+                </div>
+            </div>
+
+            <!-- Columna 2: Mapa del sitio -->
+            <div class="footer-col">
+                <h3>Mapa del Sitio</h3>
+                <ul>
+                    <li><a href="#">Inicio</a></li>
+                    <li><a href="#">Nuestra historia</a></li>
+                    <li><a href="#">Nuestra carta</a></li>
+                    <li><a href="#">Reservas</a></li>
+                    <li><a href="#">Ubicación</a></li>
+                    <li><a href="#">Contáctanos</a></li>
+                    <li><a href="#">Libro de Reclamaciones</a></li>
+                </ul>
+            </div>
+
+            <!-- Columna 3: Local principal -->
+            <div class="footer-col">
+                <h3>Local Sicuani</h3>
+                <p>📍 Av. Garcilaso 325<br>Sicuani, Cusco, Perú</p>
+                <p>☎ (084) 351 742</p>
+                <p>✉ contacto@saborcasero.pe</p>
+                <p>📱 +51 984 321 654</p>
+                <p>🕒 Lun – Dom: 11:00 am – 10:30 pm</p>
+            </div>
+
+            <!-- Columna 4: Pedidos y eventos -->
+            <div class="footer-col">
+                <h3>Pedidos y Eventos</h3>
+                <p>🍽 Servicio para eventos y reuniones</p>
+                <p>🚚 Delivery en Sicuani</p>
+                <p>📞 Pedidos: +51 973 555 214</p>
+                <p>✉ eventos@saborcasero.pe</p>
+            </div>
+
+        </div>
+
+        <!-- Barra inferior de derechos de autor -->
+        <div class="footer-bottom">
+            © 2026 SABOR CASERO – Sicuani | Todos los derechos reservados
+        </div>
+    </footer>
+
+    <!-- ================= BOTÓN WHATSAPP ================= -->
+    <a href="https://wa.me/51984321654" class="whatsapp" target="_blank">
+        💬
+    </a>
+
+    <!-- ================= SCRIPT JS ================= -->
+    <script>
+        // Carrusel automático de imágenes
+        document.addEventListener("DOMContentLoaded", function () {
+            let slides = document.querySelectorAll(".slide");
+            let index = 0;
+
+            // Cambia de imagen cada 3 segundos
+            setInterval(() => {
+                slides[index].classList.remove("active");
+                index = (index + 1) % slides.length;
+                slides[index].classList.add("active");
+            }, 3000);
+        });
+
+        // Botón para mostrar/ocultar el mapa
+        const botonMapa = document.getElementById("mapa-boton");
+        const ventanaMapa = document.getElementById("mapa-ventana");
+
+        botonMapa.addEventListener("click", () => {
+            ventanaMapa.classList.toggle("oculto");
+        });
+    </script>
+    </div>
+    <script src="../js/splash.js"></script>
+</body>
+</html>

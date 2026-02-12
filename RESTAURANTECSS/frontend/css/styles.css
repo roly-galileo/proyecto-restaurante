@@ -1,0 +1,560 @@
+/* =====================================================
+   CONFIGURACIÓN GENERAL
+   ===================================================== */
+
+body {
+  margin: 0; /* Elimina márgenes por defecto */
+  background: url(https://kosmosperu.com/cdn/shop/articles/web_kosmosperu_Mesa_de_trabajo_1_copia_60.png?v=1741957900&width=1920);
+  background-size: cover;           /* Ajusta la imagen al contenedor */
+  background-position: center;      /* Centra la imagen */
+  background-attachment: fixed;     /* Hace que la imagen sea fija al hacer scroll */
+  text-align: center;               /* Centra el texto global */
+  font-family: 'Marcellus', serif; /* Fuente principal */
+  overflow-x: hidden;               /* Evita scroll horizontal */
+}
+
+
+/* =====================================================
+              BARRA SUPERIOR
+   ===================================================== */
+
+.top-bar {
+  background: linear-gradient(90deg, #471416, #510707);
+  padding: 0px 80px;
+  display: flex;              /* activa modo flexible */   
+  justify-content: space-between; /* texto a la izquierda, íconos a la derecha */
+  align-items: center;        /* los pone en la MISM vertical */
+  
+}
+
+.top-bar p {
+  font-style: italic;
+  font-size: 16px;
+  letter-spacing: 1px;
+  color: #f5f5f5;
+  margin: 0;
+}
+
+/* Redes sociales */
+.social-icons a {
+  margin-left: 13px;
+  display: inline-block;
+  transition: transform 0.4s ease;
+}
+
+.social-icons a:hover {
+  transform: scale(1.4);
+}
+
+.social-icons img {
+  width: 30px;
+  height: 30px;
+}
+
+
+
+
+/* =====================================================
+   MENÚ PRINCIPAL
+   ===================================================== */
+
+.menu-principal {
+  position: sticky; /* Se queda visible al hacer scroll */
+  top: 0;
+  background: linear-gradient(to right, #ce0909, #bfa514);
+  z-index: 999;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.4);
+}
+
+.menu-principal ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.menu-principal a {
+  display: block;
+  padding: 15px 18px;
+  text-decoration: none;
+  color: white;
+  font-size: 16px;
+  transition: 0.3s;
+}
+
+.menu-principal a:hover {
+  background: #c59d5f;
+  color: black;
+}
+
+/* Botón especial de reserva */
+.reserva-btn {
+  background: #c59d5f;
+  color: rgb(172, 42, 42) !important;
+  font-weight: bold;
+  border-radius: 4px;
+  margin-left: 8px;
+}
+
+.reserva-btn:hover {
+  background: #9e9993;
+}
+
+
+
+
+/* =====================================================
+   (PORTADA)
+   ===================================================== */
+
+/* FONDO PRINCIPAL ESTILOS*/
+.hero {
+  height: 100vh;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.overlay {
+  padding: 40px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+/* Título principal */
+h1 {
+  font-style: italic;
+  font-size: 70px;
+  color: #1e0101;
+  text-shadow: 2px 2px 6px black;
+  margin-bottom: 10px;
+  letter-spacing: 1px;
+  font-weight: 700;
+}
+
+.hero p {
+  font-size: 25px;
+  background: linear-gradient(to right, rgba(255,127,95,0.5), rgba(254,180,123,0.6));
+  border-radius: 10px;
+  color: #41060a;
+  font-style: italic;
+}
+
+
+  
+
+/* =====================================================
+   TÍTULOS GENERALES
+   ===================================================== */
+
+h2 {
+  background-color: #f3c053;
+  margin-top: 28px;
+  color: #3e2723;
+  border-bottom: 3px solid #c46a2d;
+  display: inline-block;
+  padding-bottom: 6px;
+}
+
+h3 {
+  padding: 12px;
+  margin: 0;
+  font-size: 18px;
+}
+
+
+
+/* =====================================================
+   BOTÓN MAPA
+   ===================================================== */
+
+#mapa-boton {
+  position: fixed;
+  bottom: 90px;
+  right: 20px;
+  width: 70px;
+  height: 66px;
+  background: #e74c3c;
+  color: white;
+  border-radius: 50%;
+  font-size: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+#mapa-ventana {
+  position: fixed;
+  bottom: 130px;
+  right: 100px;
+  width: 320px;
+  background: rgb(154, 153, 153);
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  z-index: 999;
+}
+#mapa-boton:hover {
+  transform: scale(1.2);
+} 
+
+
+
+/* =====================================================
+   boton WHATSAPP
+   ===================================================== */
+
+.whatsapp {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  background: #048934;
+  font-size: 28px;
+  padding: 12px 16px;
+  border-radius: 50%; 
+  text-decoration: none;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+.whatsapp:hover {
+  transform: scale(1.2);
+} 
+
+/* =====================================================
+   botones de reserva
+   ===================================================== */
+
+/* espacios para rellenar en la reserva */
+input {
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid #cd7025;
+  font-size: 16px;
+  margin-bottom: 15px;
+}
+
+/*Barra de menu superior*/
+.menu-principal {
+  position: sticky; /*mantiene el menu*/
+  top: 0;/* mantiene pegado arriba */
+  background: linear-gradient(to right, #ce0909, #bfa514) ;
+  z-index: 999; /*se sobrepone*/
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.777);
+}
+/*contenido de la barra de menu*/
+.menu-principal ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex; /*fila*/
+  justify-content:center;
+  flex-wrap: wrap;/*mueve abajo cuando no hay espacio*/
+}
+.menu-principal a {
+  display: block;
+  padding: 15px 18px;
+  text-decoration: none;
+  color: white;
+  font-size: 16px;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+.menu-principal a:hover {
+  background: #c59d5f;
+  color: black;
+}
+
+
+
+/* =====================================================
+   FOOTER
+   ===================================================== */
+
+.footer {
+  background: #0e0e0e;
+  color: #e9e5e5;
+  padding-top: 50px;
+}
+
+.footer-contenido {
+  width: 90%;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
+  gap: 40px;
+  padding-bottom: 40px;
+}
+
+.footer-col h3,
+.logo-footer { 
+  color: white; 
+  margin-bottom: 15px; 
+}
+
+.footer-col h3,
+.logo-footer {
+  color: #ffffff;
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+.logo-footer {
+  color: #d70c05;
+  font-size: 20px;
+  letter-spacing: 2px;
+} 
+.footer-col p,
+.footer-col li { font-size: 14px; 
+  line-height: 1.6; text-align: left; }
+
+.footer-col ul { 
+  list-style: none; 
+  padding: 0; }
+  
+.footer-col li {
+  color:#e27579;
+  font-size: 14px;
+  line-height: 1.5; /*cio entre lineas*/
+  text-align: left;
+}
+.footer-col ul {
+  list-style: none;
+  padding:0;
+}
+.footer-col ul li {
+  margin-bottom:8px;
+}
+
+/*letras enlace*/
+.footer-col a {
+  text-decoration: none;
+  color: #bbb;
+  transition: 0.3s;
+}
+
+.footer-col a:hover { color: #e10600; }
+.footer-col a:hover {
+  color: #e10600;
+}
+.redes a {
+  margin-right: 20px;
+  font-size: 14px;
+}
+
+.footer-bottom {
+  background: black;
+  text-align: center;
+  padding: 15px;
+  font-size: 13px;
+  border-top: 2px solid #222;
+}
+
+/* EFECTO CARRUCEL DE LOS PLATILLOS*/
+.seccion-destacada {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 60px 10%;
+  background: rgba(114, 151, 206, 0.6);
+  gap: 40px;
+  font-style:italic;
+}
+.info-platos {
+  flex: 1;
+}
+.info-platos h2 {
+  font-size: 42px;
+  margin-bottom: 15px;
+  color: #7a2d0c;
+}
+.info-platos p {
+  font-size: 23px;
+  line-height: 1.4;
+  text-align:left;
+}
+
+/*efecto carrucel de las promociones*/
+.seccion-destacada-promos {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 60px 10%;
+  background: rgba(166, 179, 139, 0.6);
+  gap: 40px;
+  font-style:italic;
+}
+.info-promos {
+  flex: 1;
+}
+.info-promos h2 {
+  font-size: 42px;
+  margin-bottom: 15px;
+  color: #7a2d0c;
+}
+.info-promos p {
+  font-size: 23px;
+  line-height: 1.4;
+  text-align:left;
+}
+
+/*efecto carrucel de los TRABAJADORES*/
+.seccion-destacada-trab {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 60px 10%;
+  background: rgba(199, 153, 180, 0.6);
+  gap: 40px;
+  font-style:italic;
+}
+.info-trab {
+  flex: 1;
+}
+.info-trab h2 {
+  font-size: 42px;
+  margin-bottom: 15px;
+  color: #7a2d0c;
+}
+.info-trab p {
+  font-size: 23px;
+  line-height: 1.4;
+  text-align:left;
+}
+
+/*CARRUSEL DE TODOS LOS BLOQUES */
+.carrusel {
+  flex: 1;
+  position: relative;
+  height: 300px;
+  overflow: hidden;
+  border-radius: 15px;
+}
+/*deslizamiento*/
+.slide {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+}
+.slide.active {
+  opacity: 1;
+}
+/* mapa */
+.oculto { 
+  display: none; 
+}
+
+/* VENTANA LOGIN ---- AGREGADO 3L 9/02 */ 
+
+.login-box {
+    max-width: 420px;
+    margin: 60px auto;
+    text-align: center;
+    justify-content: center;
+}
+
+.seguridad {
+    color: green;
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+/* Inputs */
+
+.login-box input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+}
+
+/* Botón principal */
+
+.btn-principal {
+    width: 100%;
+    background: orange;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 25px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+/* Separador */
+
+.separador {
+    margin: 20px 0;
+    position: relative;
+}
+
+.separador span {
+    background: white;
+    padding: 0 10px;
+}
+
+.separador::before {
+    content: "";
+    width: 100%;
+    height: 1px;
+    background: #ccc;
+    position: absolute;
+    left: 0;
+    top: 50%;
+}
+
+/* Botones sociales */
+
+.btn-google,
+.btn-facebook,
+.btn-apple {
+    width: 100%;
+    padding: 10px;
+    margin: 6px 0;
+    border-radius: 25px;
+    background: white;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    color:#0e0e0e;
+}
+
+/* Links */
+
+.ayuda a,
+.terminos a {
+    color: orange;
+    text-decoration: none;
+}
+
+.terminos {
+    font-size: 13px;
+    margin-top: 15px;
+}
+
+#splash {
+  position: fixed;      /* Fija el splash en toda la pantalla */
+  inset: 0;             /* Top, right, bottom, left = 0 */
+  background: white;    /* Fondo blanco para cubrir el contenido */
+  display: flex;        /* Flexbox para centrar contenido */
+  flex-direction: column; /* Imagen arriba, texto abajo */
+  justify-content: center; /* Centrar verticalmente */
+  align-items: center;     /* Centrar horizontalmente */
+  z-index: 9999;        /* Que esté encima de todo */
+}
+
+#splash img {
+  max-width: 400px;  /* Ajusta tamaño máximo de imagen */
+  height: auto;
+  margin-bottom: 20px; /* Espacio entre imagen y texto */
+}
+
+#splash p {
+  font-family: Arial, sans-serif;
+  font-size: 18px;
+  color: #333;
+  margin: 0;
+}

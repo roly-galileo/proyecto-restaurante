@@ -1,0 +1,33 @@
+/* =====================================================
+   BOTÓN promociones
+   ===================================================== */
+
+#promociones-boton {
+  position: fixed;
+  bottom: 165px;
+  right: 20px;
+  width: 70px;
+  height: 66px;
+  background: #e74c3c;
+  color: white;
+  border-radius: 50%;
+  font-size: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+#promociones-ventana {
+  position: fixed;
+  bottom: 200px;
+  right: 100px;
+  width: 320px;
+  background: rgb(154, 153, 153);
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  z-index: 999;
+}
+#promociones-boton:hover {
+  transform: scale(1.2);}
