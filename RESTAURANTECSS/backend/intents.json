@@ -1,0 +1,27 @@
+{
+    "intents": [
+        {
+        "tag": "saludo",
+        "patterns": ["hola", "buenas","buenas tardes"],
+        "responses": ["Hola👋", "¡Buenas!", "En que puedo ayudarlo?"]
+        },
+
+        {
+        "tag": "menu",
+        "patterns": ["menu","que hay en el menu","que hay de comida","que bebidas tiene"],
+        "responses": ["Tenemos los siguientes platillos: " ]
+        },        
+        
+        {
+        "tag": "reserva",
+        "patterns": ["tiene mesas disponibles", "hay mesas"],
+        "responses": ["Si, ¿Desea reserva una mesa?"]
+        },
+
+        {
+        "tag": "despedida",
+        "patterns": ["adios", "hasta luego", "chau"],
+        "responses": ["¡Hasta luego!", "Cuídate 👋"]
+        }
+    ]
+}

@@ -10,6 +10,7 @@
     <!-- Archivo CSS principal del sitio -->
     <link rel='stylesheet' href="../css/styles.css">
     <link rel='stylesheet' href="../css/promos.css">
+    <link rel="stylesheet" href="../css/style_chat.css">
     
     <!-- Fuente Marcellus para textos destacados o secciones especiales -->
     <link href="https://fonts.googleapis.com/css2?family=Marcellus&display=swap" rel="stylesheet">
@@ -178,8 +179,16 @@
     
 
     <!-- ================= BOTÓN Y VENTANA DEL CHATBOT ================= -->
-    <div id="chat-boton"></div>
-    <div id="chat-ventana" class="oculto"></div>
+    <div id="chat-icon" onclick="toggleChat()">💬</div>
+
+    <div id="chat-box" style="background-color: aqua;">
+    <ul id="chat-messages"></ul>
+
+    <div class="chat-input">
+        <input id="msg" type="text" placeholder="Escribe..." />
+        <button id="send-btn">Enviar</button>
+    </div>
+    </div>
 
     <!-- ================= FOOTER ================= -->
     <div id="chat-ventana" class="oculto">
@@ -247,11 +256,14 @@
     </footer>
 
     <!-- ================= BOTÓN WHATSAPP ================= -->
+    <!-- 
     <a href="https://wa.me/51984321654" class="whatsapp" target="_blank">
         💬
-    </a>
+    </a> -->
 
     <!-- ================= SCRIPT JS ================= -->
+    <script src="../js/chat.js"></script>
+
     <script>
         // Carrusel automático de imágenes
         document.addEventListener("DOMContentLoaded", function () {
