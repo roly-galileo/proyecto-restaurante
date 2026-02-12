@@ -3,7 +3,6 @@
 
 <head>
     <meta charset="UTF-8">
-
     <title>Reservar Mesa</title>
 
     <!-- Bootstrap -->
@@ -18,14 +17,10 @@
 
 <body>
 
-<!-- ================= FORMULARIO DE RESERVAS ================= -->
 <div class="container my-5">
-
     <div class="row align-items-center">
 
-        <!-- formulario -->
         <div class="col-md-6">
-
             <form id="formReserva"
                 class="contenedor card shadow-lg p-4 needs-validation"
                 novalidate>
@@ -34,54 +29,43 @@
                     Reservar Mesa
                 </h2>
 
-                <!-- Nombre -->
                 <input type="text"
                     id="nombre"
                     name="nombre"
                     class="form-control mb-3"
                     placeholder="Aquí tu nombre"
                     required>
-
                 <div class="invalid-feedback">No válido</div>
 
-                <!-- Teléfono -->
                 <input type="tel"
                     id="telefono"
                     name="telefono"
                     class="form-control mb-3"
                     placeholder="Teléfono"
                     required>
-
                 <div class="invalid-feedback">No válido</div>
 
-                <!-- Fecha -->
                 <p>Fecha de reserva:</p>
-
                 <input type="date"
                     id="fecha"
                     name="fecha"
                     class="form-control mb-3"
                     required>
 
-                <!-- Hora inicio -->
                 <p>Desde:</p>
-
                 <input type="time"
                     id="inicio"
                     name="inicio"
                     class="form-control mb-3"
                     required>
 
-                <!-- Hora final -->
                 <p>Hasta:</p>
-
                 <input type="time"
                     id="final"
                     name="final"
                     class="form-control mb-3"
                     required>
 
-                <!-- Personas -->
                 <input type="number"
                     id="personas"
                     name="personas"
@@ -90,12 +74,10 @@
                     min="1"
                     required>
 
-                <!-- Botones -->
                 <button type="submit"
                     name="accion"
                     value="azar"
                     class="btn btn-success me-2">
-
                     Reservar al azar
                 </button>
 
@@ -103,59 +85,39 @@
                     name="accion"
                     value="elegir"
                     class="btn btn-success me-2">
-
                     Elegir mesa
                 </button>
 
-            </form>
+                <!-- NUEVO: contenedor mesas -->
+                <div id="contenedorMesas" class="mt-3"></div>
 
+            </form>
         </div>
 
-        <!-- columna derecha -->
         <div class="col-md-6">
-
             <div class="row text-center">
-
-                <!-- Imagen -->
                 <div class="col-12 mb-3">
-
-                    <img src="../img/mesas.png"
-                        class="img-fluid">
-
+                    <img src="../img/mesas.png" class="img-fluid">
                 </div>
 
-                <!-- Respuesta backend -->
                 <div class="col-12">
-
                     <div id="respuestaBackend"
                         class="card p-3 shadow-sm d-none">
-
                         <h5 class="text-success mb-2">
                             ✅ Reserva Confirmada
                         </h5>
-
-                        <p id="detalleReserva"
-                            class="mb-0"></p>
-
+                        <p id="detalleReserva" class="mb-0"></p>
                     </div>
-
                 </div>
-
             </div>
-
         </div>
 
     </div>
-
 </div>
 
-<!-- Mensaje -->
 <p id="mensaje" class="alert mt-3 d-none"></p>
 
-<!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-
-<!-- Tu JS separado -->
 <script src="../js/reserva.js"></script>
 
 </body>
