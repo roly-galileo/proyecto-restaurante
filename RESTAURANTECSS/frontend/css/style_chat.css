@@ -1,0 +1,66 @@
+/* ICONO */
+#chat-icon {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #25d366;
+  color: white;
+  font-size: 26px;
+  padding: 14px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/* CAJA DEL CHAT */
+#chat-box {
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  width: 300px;
+  background: #f7f7f7;
+  border-radius: 8px;
+  padding: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
+
+#chat-messages {
+  height: 200px;
+  overflow-y: auto;
+  list-style: none;
+  padding: 0;
+}
+
+/* MENSAJES */
+.msg {
+  margin: 5px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.user {
+  background: #dcf8c6;
+  text-align: right;
+}
+
+.bot {
+  background: white;
+}
+
+/*BOTON*/
+#send-btn{
+  background-color: #25d366;
+  margin-left: 90%;
+  border-radius: 5px;
+}
+
+/* OCULTO */
+.hidden {
+  display: none;
+}
+
+#msg {
+  width: 100%;
+  padding: 6px;
+  margin-top: 5px;
+}
