@@ -1,86 +1,815 @@
-/* =====================================================
-   FORMULARIOS (LOGIN / RESERVAS)
-   ===================================================== */
+/* ===================================================
+   SABOR CASERO – reservas.css
+   Página de Reservas · Sistema de diseño consistente
+=================================================== */
 
-/* Tarjeta principal de reserva */
-.contenedor {
-  background: rgba(255,255,255,0.75);
-  max-width: 500px;
-  margin: 50px auto;
-  padding: 40px 58px 40px 30px ;
-  border-radius: 30px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-  border: 4px solid rgba(0,0,0,0.2);
-}
+/* ---------- Variables (idénticas al sitio principal) ---------- */
+:root {
+    --color-tierra:       #6B3A2A;
+    --color-dorado:       #C8922A;
+    --color-dorado-claro: #E8B86D;
+    --color-crema:        #FAF3E8;
+    --color-crema-osc:    #F0E4CC;
+    --color-texto:        #2C1A0E;
+    --color-texto-suave:  #7A5C48;
+    --color-blanco:       #FFFFFF;
+    --color-acento:       #A0522D;
+    --color-exito:        #2D6A4F;
+    --color-exito-light:  #D8F3DC;
+    --color-error:        #9B2335;
+    --color-error-light:  #FDECEA;
 
-/* Inputs de formulario */
-input {
-  padding: px;
-  border-radius: 10px;
-  border: 1px solid #b08968;
-  font-size: 16px;
-  margin-bottom: 12px;
-  width: 100%;
-}
+    --font-display: 'Playfair Display', Georgia, serif;
+    --font-body:    'Lato', 'Helvetica Neue', sans-serif;
 
-/* Botones de formulario */
-/* Botón de reserva */
-button {
-  background: linear-gradient(180deg, #1b8719, #23482a);
-  color: white;
-  border: none;
-  padding: 13px 24px;
-  font-size: 17px;
-  border-radius: 12px;
-  cursor: pointer;
-  margin-top: 22px;
-  transition: 0.3s;
+    --radius-sm:  6px;
+    --radius-md:  14px;
+    --radius-lg:  24px;
+
+    --shadow-soft: 0 4px 24px rgba(107, 58, 42, 0.10);
+    --shadow-card: 0 12px 48px rgba(107, 58, 42, 0.16);
+
+    --transition: 0.28s ease;
 }
 
-button:hover { transform: scale(1.05); 
-}
-button:disabled { opacity: 0.7; cursor: not-allowed; 
+/* ---------- Reset & Base ---------- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; }
+
+body {
+    font-family: var(--font-body);
+    background: var(--color-crema);
+    color: var(--color-texto);
+    min-height: 100vh;
+    line-height: 1.65;
+    overflow-x: hidden;
 }
 
-/* Mensajes de formulario */
-#mensaje {
-  margin-top: 18px;
-  font-weight: bold;
-  font-size: 18px;
+/* ===================================================
+   LOADING OVERLAY
+=================================================== */
+.loading-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(44, 26, 14, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9000;
+    backdrop-filter: blur(4px);
+    opacity: 1;
+    transition: opacity var(--transition);
 }
-/* al pasar por el botón */
-button:hover {
-  transform: scale(1.09 );
+
+.loading-overlay[aria-hidden="true"] {
+    opacity: 0;
+    pointer-events: none;
 }
-.layout-reserva {
-  display: flex;
-  gap: 30px;
-  align-items: flex-start;
-  max-width: 1000px;
-  margin: 0 auto;
+
+.loading-overlay.show { opacity: 1; pointer-events: all; }
+
+.loading-spinner {
+    background: var(--color-blanco);
+    padding: 36px 44px;
+    border-radius: var(--radius-lg);
+    text-align: center;
+    box-shadow: var(--shadow-card);
+    position: relative;
+    overflow: hidden;
 }
-.img-mesas {
-  max-width: 400px;
-  width: 100%;
+
+.loading-spinner::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--color-tierra), var(--color-dorado));
 }
-/* Botón especial de Reservaciones */
-.reserva-btn {
-  background: #dcb679;
-  color: rgb(137, 75, 75) !important;
-  font-weight: bold;
-  border-radius: 10px;
-  margin-left: 8px;
+
+.pulse-dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 14px;
 }
-.login-btn {
-  background: #a1ac74;
-  color: rgb(111, 9, 9) !important;
-  font-weight: bold;
-  border-radius: 10px;
-  margin-left: 8px;
+
+.pulse-dot {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--color-dorado);
+    animation: pulseDot 1.4s infinite ease-in-out both;
 }
-.login-btn:hover {
-  background: #a0bc24 !important;
+
+.pulse-dot:nth-child(1) { animation-delay: -0.32s; }
+.pulse-dot:nth-child(2) { animation-delay: -0.16s; }
+
+@keyframes pulseDot {
+    0%, 80%, 100% { transform: scale(0.3); opacity: 0.4; }
+    40%           { transform: scale(1);   opacity: 1; }
 }
-.reserva-btn:hover {
-  background: #d6ccbd !important;
+
+.loading-text {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    color: var(--color-tierra);
+    font-weight: 600;
+}
+
+/* ===================================================
+   TOAST / MENSAJE FLOTANTE
+=================================================== */
+.toast-msg {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    max-width: 380px;
+    padding: 16px 20px;
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+    font-weight: 600;
+    font-family: var(--font-body);
+    z-index: 8000;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    animation: toastIn 0.35s cubic-bezier(0.34,1.56,0.64,1);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.toast-msg.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(20px);
+}
+
+.toast-msg.success {
+    background: var(--color-exito);
+    color: var(--color-blanco);
+    border-left: 4px solid #52b788;
+}
+
+.toast-msg.error {
+    background: var(--color-error);
+    color: var(--color-blanco);
+    border-left: 4px solid #e57373;
+}
+
+@keyframes toastIn {
+    from { opacity: 0; transform: translateX(40px) scale(0.95); }
+    to   { opacity: 1; transform: translateX(0)  scale(1); }
+}
+
+/* ===================================================
+   HEADER MINI
+=================================================== */
+.res-header {
+    background: var(--color-texto);
+    padding: 14px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 500;
+    border-bottom: 3px solid var(--color-dorado);
+}
+
+.res-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    transition: opacity var(--transition);
+}
+
+.res-logo:hover { opacity: 0.8; }
+
+.res-logo .logo-icon { font-size: 1.4rem; }
+
+.res-logo .logo-text {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-dorado-claro);
+    letter-spacing: 0.04em;
+}
+
+.res-header-sub {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: rgba(250, 243, 232, 0.45);
+}
+
+/* ===================================================
+   LAYOUT PRINCIPAL
+=================================================== */
+.res-main {
+    max-width: 1160px;
+    margin: 0 auto;
+    padding: 48px 24px 64px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: start;
+}
+
+/* ===================================================
+   TARJETA DEL FORMULARIO
+=================================================== */
+.form-card {
+    background: var(--color-blanco);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+    animation: cardEntrance 0.6s ease;
+    position: relative;
+}
+
+.form-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--color-tierra), var(--color-dorado), var(--color-tierra));
+}
+
+@keyframes cardEntrance {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Encabezado de la tarjeta */
+.form-card-header {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 28px 32px 24px;
+    background: linear-gradient(135deg, var(--color-tierra) 0%, var(--color-acento) 100%);
+    color: var(--color-crema);
+}
+
+.form-card-icon {
+    font-size: 2.4rem;
+    opacity: 0.9;
+    flex-shrink: 0;
+}
+
+.form-card-title {
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--color-blanco);
+}
+
+.form-card-sub {
+    font-size: 0.82rem;
+    opacity: 0.75;
+    margin-top: 3px;
+    letter-spacing: 0.02em;
+}
+
+/* ===================================================
+   INDICADOR DE PROGRESO
+=================================================== */
+.progress-track {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 24px 32px 0;
+    margin-bottom: 8px;
+}
+
+.progress-line {
+    position: absolute;
+    top: 36px;
+    left: 48px;
+    right: 48px;
+    height: 2px;
+    background: var(--color-crema-osc);
+    z-index: 0;
+}
+
+.progress-line-fill {
+    position: absolute;
+    top: 36px;
+    left: 48px;
+    height: 2px;
+    width: 0%;
+    background: linear-gradient(90deg, var(--color-tierra), var(--color-dorado));
+    z-index: 1;
+    transition: width 0.5s ease;
+    border-radius: 2px;
+}
+
+.progress-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    position: relative;
+    z-index: 2;
+}
+
+.progress-step span {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--color-blanco);
+    border: 2.5px solid var(--color-crema-osc);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--color-texto-suave);
+    transition: all var(--transition);
+}
+
+.progress-step label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-texto-suave);
+    opacity: 0.6;
+    transition: opacity var(--transition);
+    cursor: default;
+}
+
+.progress-step.active span {
+    background: var(--color-tierra);
+    border-color: var(--color-tierra);
+    color: var(--color-blanco);
+    transform: scale(1.15);
+    box-shadow: 0 0 0 4px rgba(107, 58, 42, 0.15);
+}
+
+.progress-step.active label { opacity: 1; color: var(--color-tierra); }
+
+.progress-step.completed span {
+    background: var(--color-dorado);
+    border-color: var(--color-dorado);
+    color: var(--color-blanco);
+}
+
+.progress-step.completed label { opacity: 0.85; }
+
+/* ===================================================
+   CAMPOS DEL FORMULARIO
+=================================================== */
+form {
+    padding: 20px 32px 8px;
+}
+
+.field-group {
+    margin-bottom: 20px;
+    transition: transform var(--transition);
+}
+
+.field-group:focus-within {
+    transform: translateY(-1px);
+}
+
+.field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.field-label {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-texto-suave);
+    margin-bottom: 8px;
+    cursor: pointer;
+}
+
+.field-label i {
+    color: var(--color-dorado);
+    font-size: 0.95rem;
+}
+
+.field-input {
+    width: 100%;
+    padding: 12px 16px;
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    color: var(--color-texto);
+    background: var(--color-crema);
+    border: 2px solid var(--color-crema-osc);
+    border-radius: var(--radius-md);
+    outline: none;
+    transition: border-color var(--transition), box-shadow var(--transition), background var(--transition);
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+.field-input::placeholder { color: var(--color-texto-suave); opacity: 0.55; }
+
+.field-input:hover {
+    border-color: rgba(107, 58, 42, 0.35);
+}
+
+.field-input:focus {
+    border-color: var(--color-tierra);
+    background: var(--color-blanco);
+    box-shadow: 0 0 0 4px rgba(107, 58, 42, 0.1);
+}
+
+/* Estado válido */
+.field-input.is-valid {
+    border-color: var(--color-exito);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%232D6A4F' viewBox='0 0 16 16'%3E%3Cpath d='M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 40px;
+}
+
+/* Estado inválido */
+.field-input.is-invalid {
+    border-color: var(--color-error);
+    background: var(--color-error-light);
+}
+
+.field-error {
+    display: none;
+    margin-top: 6px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--color-error);
+    align-items: center;
+    gap: 5px;
+}
+
+.field-error i { font-size: 0.85rem; }
+
+.field-group.invalid .field-error { display: flex; }
+
+.field-hint {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 5px;
+    font-size: 0.78rem;
+    color: var(--color-texto-suave);
+    opacity: 0.75;
+}
+
+/* ===================================================
+   AVISO DE HORARIO
+=================================================== */
+.info-banner {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 18px;
+    background: rgba(200, 146, 42, 0.1);
+    border: 1.5px solid rgba(200, 146, 42, 0.3);
+    border-radius: var(--radius-md);
+    margin-bottom: 24px;
+    font-size: 0.875rem;
+    color: var(--color-texto);
+    line-height: 1.6;
+}
+
+.info-banner-icon {
+    color: var(--color-dorado);
+    font-size: 1.2rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.info-banner small { opacity: 0.75; font-size: 0.78rem; }
+
+/* ===================================================
+   BOTONES DEL FORMULARIO
+=================================================== */
+.btn-group-res {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.btn-res {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    width: 100%;
+    padding: 14px 24px;
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: transform var(--transition), box-shadow var(--transition), background var(--transition);
+}
+
+/* Efecto ripple */
+.btn-res::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255,0.18);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s ease;
+}
+
+.btn-res:hover::after { transform: scaleX(1); }
+
+.btn-res:hover {
+    transform: translateY(-3px);
+}
+
+.btn-res:active { transform: translateY(-1px); }
+
+.btn-res-primary {
+    background: var(--color-tierra);
+    color: var(--color-blanco);
+    box-shadow: 0 4px 16px rgba(107, 58, 42, 0.3);
+}
+
+.btn-res-primary:hover {
+    background: var(--color-acento);
+    box-shadow: 0 8px 28px rgba(107, 58, 42, 0.4);
+}
+
+.btn-res-outline {
+    background: transparent;
+    color: var(--color-tierra);
+    border: 2.5px solid var(--color-tierra);
+    box-shadow: none;
+}
+
+.btn-res-outline:hover {
+    background: var(--color-crema);
+    box-shadow: 0 4px 14px rgba(107, 58, 42, 0.15);
+}
+
+/* ===================================================
+   CONTENEDOR DE MESAS
+=================================================== */
+.mesas-container {
+    margin-bottom: 12px;
+    min-height: 0;
+    transition: min-height var(--transition);
+}
+
+/* ===================================================
+   BADGES DE CONFIANZA
+=================================================== */
+.trust-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    padding: 20px 32px 28px;
+    border-top: 1px solid var(--color-crema-osc);
+}
+
+.trust-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 13px;
+    background: rgba(107, 58, 42, 0.07);
+    color: var(--color-tierra);
+    border: 1px solid rgba(107, 58, 42, 0.18);
+    border-radius: 99px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.trust-badge i { color: var(--color-dorado); }
+
+/* ===================================================
+   COLUMNA VISUAL
+=================================================== */
+.res-visual-col { }
+
+.visual-sticky {
+    position: sticky;
+    top: 80px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* Imagen */
+.res-img-wrap {
+    position: relative;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-card);
+    aspect-ratio: 4 / 3;
+    animation: cardEntrance 0.7s ease 0.15s both;
+}
+
+.res-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s ease;
+}
+
+.res-img-wrap:hover .res-img { transform: scale(1.04); }
+
+.res-img-caption {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 20px 20px 18px;
+    background: linear-gradient(to top, rgba(44, 26, 14, 0.85), transparent);
+    color: var(--color-crema);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+}
+
+/* Tarjeta de confirmación */
+.confirm-card {
+    background: var(--color-blanco);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+    animation: confirmIn 0.5s cubic-bezier(0.34,1.56,0.64,1);
+    transition: opacity var(--transition), transform var(--transition);
+}
+
+.confirm-card.hidden {
+    display: none;
+}
+
+@keyframes confirmIn {
+    from { opacity: 0; transform: scale(0.92) translateY(10px); }
+    to   { opacity: 1; transform: scale(1)    translateY(0); }
+}
+
+.confirm-card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 18px 22px;
+    background: linear-gradient(135deg, var(--color-exito), #52b788);
+    color: var(--color-blanco);
+}
+
+.confirm-card-header i { font-size: 1.5rem; }
+
+.confirm-card-header h3 {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.confirm-card-body { padding: 20px 22px; }
+
+.detalle-lista { display: flex; flex-direction: column; gap: 8px; }
+
+.detalle-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    background: var(--color-crema);
+    border-radius: var(--radius-sm);
+    font-size: 0.875rem;
+    transition: transform var(--transition);
+}
+
+.detalle-item:hover { transform: translateX(4px); }
+
+.detalle-item i {
+    font-size: 1.1rem;
+    color: var(--color-dorado);
+    flex-shrink: 0;
+    width: 22px;
+    text-align: center;
+}
+
+.confirm-note {
+    margin-top: 16px;
+    padding: 12px 16px;
+    background: var(--color-crema);
+    border-radius: var(--radius-sm);
+    font-size: 0.8rem;
+    color: var(--color-texto-suave);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.confirm-note p { display: flex; align-items: center; gap: 7px; }
+.confirm-note i { color: var(--color-tierra); }
+
+/* ¿Por qué reservar? */
+.why-card {
+    background: var(--color-blanco);
+    border-radius: var(--radius-lg);
+    padding: 24px 26px;
+    box-shadow: var(--shadow-soft);
+    animation: cardEntrance 0.7s ease 0.3s both;
+}
+
+.why-title {
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--color-tierra);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.why-title i { color: var(--color-dorado); }
+
+.why-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.why-list li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.875rem;
+    color: var(--color-texto-suave);
+}
+
+.why-list li i {
+    color: var(--color-dorado);
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+
+/* ===================================================
+   FOOTER MINI
+=================================================== */
+.res-footer {
+    background: var(--color-texto);
+    padding: 20px 32px;
+    text-align: center;
+    font-size: 0.78rem;
+    color: rgba(250, 243, 232, 0.4);
+    letter-spacing: 0.04em;
+    border-top: 3px solid var(--color-dorado);
+}
+
+.res-footer strong { color: var(--color-dorado-claro); }
+
+/* ===================================================
+   RESPONSIVE
+=================================================== */
+@media (max-width: 900px) {
+    .res-main {
+        grid-template-columns: 1fr;
+        gap: 28px;
+        padding: 32px 16px 48px;
+    }
+
+    .visual-sticky { position: static; }
+
+    .res-header { padding: 12px 20px; }
+    .res-header-sub { display: none; }
+}
+
+@media (max-width: 600px) {
+    .form-card-header { padding: 22px 20px 18px; gap: 12px; }
+    .form-card-icon   { font-size: 1.8rem; }
+    .form-card-title  { font-size: 1.4rem; }
+
+    form              { padding: 16px 20px 8px; }
+    .progress-track   { padding: 20px 20px 0; }
+    .trust-badges     { padding: 16px 20px 22px; }
+
+    .field-row { grid-template-columns: 1fr; }
+
+    .toast-msg {
+        right: 12px;
+        left: 12px;
+        max-width: none;
+    }
 }
