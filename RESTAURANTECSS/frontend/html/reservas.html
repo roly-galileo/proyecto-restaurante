@@ -3,122 +3,649 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Reservar Mesa</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservar Mesa - Sabor Casero</title>
 
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
     <!-- CSS -->
     <link rel="stylesheet" href="../css/reservas.css">
 
     <!-- Fuente -->
     <link href="https://fonts.googleapis.com/css2?family=Marcellus&display=swap" rel="stylesheet">
+
+    <style>
+        /* Estilos adicionales para mejorar la interactividad */
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px 0;
+        }
+
+        .contenedor {
+            border-radius: 20px !important;
+            background: white;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .contenedor::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #198754, #20c997);
+        }
+
+        .form-control:focus {
+            border-color: #198754;
+            box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.15);
+            transform: translateY(-2px);
+            transition: all 0.3s ease;
+        }
+
+        .form-control {
+            border-radius: 12px;
+            padding: 12px 16px;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:hover {
+            border-color: #198754;
+        }
+
+        .btn-success {
+            border-radius: 12px;
+            padding: 12px 24px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-success::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn-success:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(25, 135, 84, 0.4);
+        }
+
+        .btn-success:active {
+            transform: translateY(-1px);
+        }
+
+        .input-group-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .input-group-label i {
+            color: #198754;
+        }
+
+        .form-section {
+            margin-bottom: 20px;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .img-container {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .img-container:hover {
+            transform: scale(1.02);
+        }
+
+        .img-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        #respuestaBackend {
+            border-radius: 16px;
+            border-left: 5px solid #198754;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            animation: slideInRight 0.5s ease;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .reserva-header {
+            background: linear-gradient(135deg, #198754 0%, #20c997 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 12px 12px 0 0;
+            margin: -1rem -1rem 1rem -1rem;
+        }
+
+        .detalle-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            margin-bottom: 8px;
+            background: white;
+            border-radius: 8px;
+            transition: transform 0.2s ease;
+        }
+
+        .detalle-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .detalle-item i {
+            font-size: 20px;
+            color: #198754;
+            margin-right: 12px;
+            width: 30px;
+            text-align: center;
+        }
+
+        .progress-indicator {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .progress-indicator::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #e9ecef;
+            z-index: 0;
+        }
+
+        .progress-step {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: white;
+            border: 3px solid #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 12px;
+            position: relative;
+            z-index: 1;
+            transition: all 0.3s ease;
+        }
+
+        .progress-step.active {
+            background: #198754;
+            border-color: #198754;
+            color: white;
+            transform: scale(1.2);
+        }
+
+        .progress-step.completed {
+            background: #198754;
+            border-color: #198754;
+            color: white;
+        }
+
+        #mensaje {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            max-width: 400px;
+            z-index: 9999;
+            animation: slideInRight 0.3s ease;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            border-radius: 12px;
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9998;
+        }
+
+        .loading-overlay.show {
+            display: flex;
+        }
+
+        .loading-spinner {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            text-align: center;
+        }
+
+        .pulse-dot {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #198754;
+            margin: 0 4px;
+            animation: pulse 1.4s infinite ease-in-out both;
+        }
+
+        .pulse-dot:nth-child(1) { animation-delay: -0.32s; }
+        .pulse-dot:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes pulse {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+
+        .feature-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: #e7f5ec;
+            color: #198754;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            #mensaje {
+                right: 10px;
+                left: 10px;
+                max-width: none;
+            }
+
+            .btn-success {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+
+            .contenedor {
+                margin-bottom: 20px;
+            }
+        }
+
+        /* Animación de entrada */
+        .fade-in {
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
 </head>
 
 <body>
 
-<div class="container my-5">
-    <div class="row align-items-center">
+<!-- Loading Overlay -->
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner">
+        <div class="mb-3">
+            <span class="pulse-dot"></span>
+            <span class="pulse-dot"></span>
+            <span class="pulse-dot"></span>
+        </div>
+        <h5 class="text-success mb-0">Procesando...</h5>
+    </div>
+</div>
 
-        <div class="col-md-6">
+<div class="container my-5">
+    <div class="row align-items-start">
+
+        <!-- Columna del Formulario -->
+        <div class="col-lg-6 mb-4">
             <form id="formReserva"
-                class="contenedor card shadow-lg p-4 needs-validation"
+                class="contenedor card shadow-lg p-4 needs-validation fade-in"
                 novalidate>
 
-                <h2 class="text-center mb-4 fw-bold text-success border-bottom pb-2">
-                    Reservar Mesa
-                </h2>
+                <div class="reserva-header text-center">
+                    <i class="bi bi-calendar-check" style="font-size: 32px;"></i>
+                    <h2 class="mt-2 mb-0 fw-bold">Reservar Mesa</h2>
+                    <small>Complete el formulario para asegurar su mesa</small>
+                </div>
 
-                <input type="text"
-                    id="nombre"
-                    name="nombre"
-                    class="form-control mb-3"
-                    placeholder="Aquí tu nombre"
-                    required>
-                <div class="invalid-feedback">No válido</div>
+                <!-- Indicador de Progreso -->
+                <div class="progress-indicator">
+                    <div class="progress-step active" data-step="1">1</div>
+                    <div class="progress-step" data-step="2">2</div>
+                    <div class="progress-step" data-step="3">3</div>
+                    <div class="progress-step" data-step="4">4</div>
+                </div>
 
-                <input type="tel"
-                    id="telefono"
-                    name="telefono"
-                    class="form-control mb-3"
-                    placeholder="Teléfono"
-                    required>
-                <div class="invalid-feedback">No válido</div>
+                <!-- Datos Personales -->
+                <div class="form-section">
+                    <div class="input-group-label">
+                        <i class="bi bi-person-fill"></i>
+                        <span>Nombre completo</span>
+                    </div>
+                    <input type="text"
+                        id="nombre"
+                        name="nombre"
+                        class="form-control"
+                        placeholder="Ej: Juan Pérez"
+                        required>
+                    <div class="invalid-feedback">
+                        <i class="bi bi-exclamation-circle"></i> Ingrese un nombre válido (solo letras)
+                    </div>
+                </div>
 
-                <p>Fecha de reserva:</p>
-                <input type="date"
-                    id="fecha"
-                    name="fecha"
-                    class="form-control mb-3"
-                    required>
+                <div class="form-section">
+                    <div class="input-group-label">
+                        <i class="bi bi-telephone-fill"></i>
+                        <span>Teléfono de contacto</span>
+                    </div>
+                    <input type="tel"
+                        id="telefono"
+                        name="telefono"
+                        class="form-control"
+                        placeholder="999 999 999"
+                        maxlength="9"
+                        required>
+                    <div class="invalid-feedback">
+                        <i class="bi bi-exclamation-circle"></i> Ingrese 9 dígitos iniciando con 9
+                    </div>
+                </div>
 
-                <p>Desde:</p>
-                <input type="time"
-                    id="inicio"
-                    name="inicio"
-                    class="form-control mb-3"
-                    required>
+                <!-- Fecha y Hora -->
+                <div class="form-section">
+                    <div class="input-group-label">
+                        <i class="bi bi-calendar-event"></i>
+                        <span>Fecha de reserva</span>
+                    </div>
+                    <input type="date"
+                        id="fecha"
+                        name="fecha"
+                        class="form-control"
+                        required>
+                    <div class="invalid-feedback">
+                        <i class="bi bi-exclamation-circle"></i> Seleccione una fecha válida
+                    </div>
+                </div>
 
-                <p>Hasta:</p>
-                <input type="time"
-                    id="final"
-                    name="final"
-                    class="form-control mb-3"
-                    required>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-section">
+                            <div class="input-group-label">
+                                <i class="bi bi-clock"></i>
+                                <span>Hora de inicio</span>
+                            </div>
+                            <input type="time"
+                                id="inicio"
+                                name="inicio"
+                                class="form-control"
+                                required>
+                            <div class="invalid-feedback">
+                                <i class="bi bi-exclamation-circle"></i> Hora inválida
+                            </div>
+                        </div>
+                    </div>
 
-                <input type="number"
-                    id="personas"
-                    name="personas"
-                    class="form-control mb-3"
-                    placeholder="Número de personas"
-                    min="1"
-                    required>
+                    <div class="col-md-6">
+                        <div class="form-section">
+                            <div class="input-group-label">
+                                <i class="bi bi-clock-history"></i>
+                                <span>Hora de salida</span>
+                            </div>
+                            <input type="time"
+                                id="final"
+                                name="final"
+                                class="form-control"
+                                required>
+                            <div class="invalid-feedback">
+                                <i class="bi bi-exclamation-circle"></i> Hora inválida
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-                <button type="submit"
-                    name="accion"
-                    value="azar"
-                    class="btn btn-success me-2">
-                    Reservar al azar
-                </button>
+                <div class="form-section">
+                    <div class="input-group-label">
+                        <i class="bi bi-people-fill"></i>
+                        <span>Número de personas</span>
+                    </div>
+                    <input type="number"
+                        id="personas"
+                        name="personas"
+                        class="form-control"
+                        placeholder="¿Cuántas personas?"
+                        min="1"
+                        max="20"
+                        required>
+                    <div class="invalid-feedback">
+                        <i class="bi bi-exclamation-circle"></i> Entre 1 y 20 personas
+                    </div>
+                    <small class="text-muted">
+                        <i class="bi bi-info-circle"></i> Máximo 20 personas por reserva
+                    </small>
+                </div>
 
-                <button type="submit"
-                    name="accion"
-                    value="elegir"
-                    class="btn btn-success me-2">
-                    Elegir mesa
-                </button>
+                <!-- Información adicional -->
+                <div class="alert alert-info d-flex align-items-center mb-4" role="alert">
+                    <i class="bi bi-info-circle-fill me-2" style="font-size: 20px;"></i>
+                    <div>
+                        <strong>Horario de atención:</strong> 9:00 AM - 8:00 PM<br>
+                        <small>Duración: 30 min - 3 horas</small>
+                    </div>
+                </div>
 
-                <!-- NUEVO: contenedor mesas -->
+                <!-- Botones de acción -->
+                <div class="d-grid gap-2 mb-3">
+                    <button type="submit"
+                        name="accion"
+                        value="azar"
+                        class="btn btn-success btn-lg">
+                        <i class="bi bi-shuffle"></i> Reservar al Azar
+                    </button>
+
+                    <button type="submit"
+                        name="accion"
+                        value="elegir"
+                        class="btn btn-outline-success btn-lg">
+                        <i class="bi bi-hand-index"></i> Elegir mi Mesa
+                    </button>
+                </div>
+
+                <!-- Contenedor de mesas -->
                 <div id="contenedorMesas" class="mt-3"></div>
+
+                <!-- Features -->
+                <div class="mt-4 text-center">
+                    <span class="feature-badge">
+                        <i class="bi bi-shield-check"></i> Reserva Segura
+                    </span>
+                    <span class="feature-badge">
+                        <i class="bi bi-lightning-charge"></i> Confirmación Instantánea
+                    </span>
+                    <span class="feature-badge">
+                        <i class="bi bi-wifi"></i> Sin Costo
+                    </span>
+                </div>
 
             </form>
         </div>
 
-        <div class="col-md-6">
-            <div class="row text-center">
-                <div class="col-12 mb-3">
-                    <img src="../img/mesas.png" class="img-fluid">
-                </div>
-
-                <div class="col-12">
-                    <div id="respuestaBackend"
-                        class="card p-3 shadow-sm d-none">
-                        <h5 class="text-success mb-2">
-                            ✅ Reserva Confirmada
+        <!-- Columna de Visualización -->
+        <div class="col-lg-6">
+            <div class="sticky-top" style="top: 20px;">
+                
+                <!-- Imagen del restaurante -->
+                <div class="img-container mb-4 fade-in">
+                    <img src="../img/mesas.png" class="img-fluid" alt="Mesas del restaurante">
+                    <div class="position-absolute bottom-0 start-0 end-0 p-3" 
+                         style="background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);">
+                        <h5 class="text-white mb-0">
+                            <i class="bi bi-geo-alt-fill"></i> Ambiente Acogedor
                         </h5>
-                        <p id="detalleReserva" class="mb-0"></p>
                     </div>
                 </div>
+
+                <!-- Respuesta del Backend -->
+                <div id="respuestaBackend" class="card p-0 shadow-lg d-none">
+                    <div class="bg-success text-white p-3 rounded-top">
+                        <h5 class="mb-0">
+                            <i class="bi bi-check-circle-fill"></i> ¡Reserva Confirmada!
+                        </h5>
+                    </div>
+                    <div class="p-3">
+                        <div id="detalleReserva"></div>
+                        <div class="mt-3 p-3 bg-light rounded">
+                            <small class="text-muted">
+                                <i class="bi bi-envelope"></i> Recibirás un SMS de confirmación<br>
+                                <i class="bi bi-telephone"></i> También puedes llamarnos al 449 135
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Información adicional -->
+                <div class="card shadow-sm mt-4 fade-in" style="animation-delay: 0.2s;">
+                    <div class="card-body">
+                        <h6 class="card-title text-success fw-bold">
+                            <i class="bi bi-question-circle"></i> ¿Por qué reservar?
+                        </h6>
+                        <ul class="list-unstyled mb-0">
+                            <li class="mb-2">
+                                <i class="bi bi-check2 text-success"></i> Garantiza tu mesa en horarios pico
+                            </li>
+                            <li class="mb-2">
+                                <i class="bi bi-check2 text-success"></i> Evita tiempos de espera
+                            </li>
+                            <li class="mb-2">
+                                <i class="bi bi-check2 text-success"></i> Atención personalizada
+                            </li>
+                            <li>
+                                <i class="bi bi-check2 text-success"></i> Modificación flexible
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
             </div>
         </div>
 
     </div>
 </div>
 
-<p id="mensaje" class="alert mt-3 d-none"></p>
+<!-- Mensaje flotante -->
+<div id="mensaje" class="alert d-none" role="alert"></div>
 
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 <script src="../js/reserva.js"></script>
+
+<script>
+    // Script adicional para mejorar la interactividad
+    document.addEventListener('DOMContentLoaded', function() {
+        // Actualizar indicador de progreso según campos completados
+        const inputs = form.querySelectorAll('input[required]');
+        const steps = document.querySelectorAll('.progress-step');
+        
+        function updateProgress() {
+            const completed = Array.from(inputs).filter(input => {
+                if (input.type === 'text' || input.type === 'tel') {
+                    return input.value.trim() !== '' && input.classList.contains('is-valid');
+                }
+                return input.value !== '';
+            }).length;
+            
+            const percentage = (completed / inputs.length) * 4;
+            const activeStep = Math.ceil(percentage);
+            
+            steps.forEach((step, index) => {
+                if (index < activeStep) {
+                    step.classList.add('completed');
+                    step.classList.remove('active');
+                } else if (index === activeStep) {
+                    step.classList.add('active');
+                    step.classList.remove('completed');
+                } else {
+                    step.classList.remove('active', 'completed');
+                }
+            });
+        }
+        
+        inputs.forEach(input => {
+            input.addEventListener('input', updateProgress);
+            input.addEventListener('change', updateProgress);
+        });
+        
+        // Efecto de focus en inputs
+        inputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.style.transform = 'scale(1.01)';
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.style.transform = 'scale(1)';
+            });
+        });
+    });
+</script>
 
 </body>
 </html>
