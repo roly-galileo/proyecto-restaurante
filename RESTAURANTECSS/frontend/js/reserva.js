@@ -14,7 +14,7 @@ const CONFIG = {
     MIN_DURACION:   30,   // minutos
     MAX_DURACION:   180,  // minutos
     MAX_PERSONAS:   20,
-    API_URL:        '../backend/reserva.php',  // ajusta a tu ruta real
+    API_URL:        'http://192.168.1.80:3000/api/reservas',  // ajusta a tu ruta real
 };
 
 /* ===================================================

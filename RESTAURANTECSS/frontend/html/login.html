@@ -1,115 +1,162 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
-
-    <title>Iniciar Sesión | Sabor Casero</title>
-
-    <!-- BOOTSTRAP -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- CSS propio -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sabor Casero – Acceso al Panel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/login.css">
-
-    <!-- Fuente -->
-    <link href="https://fonts.googleapis.com/css2?family=Marcellus&display=swap" rel="stylesheet">
 </head>
+<body>
 
-<body class="bg-light">
+    <!-- Partículas de fondo -->
+    <div class="bg-particles" id="bgParticles"></div>
 
-    <!-- CONTENEDOR PRINCIPAL -->
-    <div class="container my-5">
+    <!-- Líneas decorativas -->
+    <div class="deco-lines">
+        <div class="deco-line"></div>
+        <div class="deco-line"></div>
+        <div class="deco-line"></div>
+    </div>
 
-        <div class="row justify-content-center">
+    <div class="login-wrapper">
 
-            <div class="col-md-5">
+        <!-- Panel izquierdo – Branding -->
+        <div class="brand-panel">
+            <div class="brand-content">
+                <div class="brand-logo">
+                    <span class="brand-icon">🍴</span>
+                </div>
+                <h1 class="brand-name">Sabor Casero</h1>
+                <p class="brand-tagline">Panel de Gestión Interna</p>
+                <div class="brand-divider">
+                    <span></span><span class="deco-dot">◆</span><span></span>
+                </div>
+                <p class="brand-desc">
+                    Sistema de administración para el equipo de<br>
+                    Sabor Casero — Sicuani, Cusco, Perú.
+                </p>
 
-                <!-- CAJA LOGIN -->
-                <div class="card shadow-lg p-4">
+                <div class="roles-preview">
+                    <div class="role-chip">👨‍🍳 Cocineros</div>
+                    <div class="role-chip">🤵 Mozos</div>
+                    <div class="role-chip">🏢 Administración</div>
+                </div>
+            </div>
 
-                    <!-- TÍTULO -->
-                    <h2 class="text-center fw-bold text-success mb-3">
-                        Iniciar sesión / Registrarse
-                    </h2>
+            <div class="brand-footer">
+                <a href="index.html" class="back-link">← Volver al sitio web</a>
+            </div>
+        </div>
 
-                    <!-- MENSAJE SEGURIDAD -->
-                    <p class="text-center text-muted mb-4">
-                        🔒 Todos los datos están protegidos
-                    </p>
+        <!-- Panel derecho – Formulario -->
+        <div class="form-panel">
+            <div class="form-card">
 
-                    <!-- FORMULARIO -->
-                    <form id="formLogin">
+                <div class="form-header">
+                    <h2>Bienvenido</h2>
+                    <p>Ingresa con tu DNI y contraseña asignada</p>
+                </div>
 
-                        <!-- EMAIL / TEL -->
-                        <div class="mb-3">
-                            <label class="form-label">
-                                Email o Teléfono
-                            </label>
+                <!-- Alerta de sesión pendiente (admin) -->
+                <div class="alert alert-warn" id="alertPendiente" style="display:none">
+                    <span class="alert-icon">⏳</span>
+                    <div>
+                        <strong>Aprobación pendiente</strong><br>
+                        <small>Tu solicitud de ingreso fue enviada al administrador.</small>
+                    </div>
+                </div>
 
-                            <input type="text"
-                                id="usuario"
-                                name="usuario"
-                                class="form-control"
-                                placeholder="Ingresa tu email o teléfono"
-                                required>
+                <!-- Alerta de error -->
+                <div class="alert alert-error" id="alertError" style="display:none">
+                    <span class="alert-icon">⚠</span>
+                    <div id="alertErrorMsg">DNI o contraseña incorrectos.</div>
+                </div>
+
+                <!-- Alerta de éxito -->
+                <div class="alert alert-success" id="alertSuccess" style="display:none">
+                    <span class="alert-icon">✅</span>
+                    <div id="alertSuccessMsg">Acceso concedido. Redirigiendo...</div>
+                </div>
+
+                <form id="loginForm" autocomplete="off">
+
+                    <div class="field-group">
+                        <label for="inputDNI">DNI</label>
+                        <div class="input-wrap">
+                            <span class="input-icon">🪪</span>
+                            <input type="text" id="inputDNI" placeholder="Ingresa tu DNI" maxlength="8" inputmode="numeric">
                         </div>
+                    </div>
 
-                        <!-- BOTÓN PRINCIPAL -->
-                        <div class="d-grid mb-3">
-                            <button type="submit" class="btn btn-success">
-                                Continuar
-                            </button>
+                    <div class="field-group">
+                        <label for="inputPass">Contraseña</label>
+                        <div class="input-wrap">
+                            <span class="input-icon">🔒</span>
+                            <input type="password" id="inputPass" placeholder="Contraseña asignada">
+                            <button type="button" class="toggle-pass" id="togglePass" aria-label="Mostrar contraseña">👁</button>
                         </div>
+                    </div>
 
-                        <!-- SEPARADOR -->
-                        <div class="text-center my-3">
-                            <span class="text-muted">O</span>
+                    <button type="submit" class="btn-login" id="btnLogin">
+                        <span class="btn-login-text">Ingresar al Panel</span>
+                        <span class="btn-login-icon">→</span>
+                        <div class="btn-spinner" id="btnSpinner"></div>
+                    </button>
+
+                </form>
+
+                <!-- Cuentas de prueba -->
+                <div class="cuentas-prueba">
+                    <button class="cuentas-toggle" onclick="toggleCuentas()">
+                        <span>📋 Cuentas de prueba</span>
+                        <span class="toggle-arrow" id="cuentasArrow">▼</span>
+                    </button>
+                    <div class="cuentas-lista" id="cuentasLista">
+                        <div class="cuenta-item" onclick="llenarCuenta('10000001','admin123')">
+                            <span class="cuenta-rol admin-rol">🏢 Admin</span>
+                            <span class="cuenta-datos">DNI: 10000001 · Pass: admin123</span>
+                            <span class="cuenta-usar">Usar →</span>
                         </div>
-
-                        <!-- BOTONES SOCIALES -->
-                        <div class="d-grid gap-2 mb-3">
-
-                            <button type="button" class="btn btn-outline-danger">
-                                Continuar con Google
-                            </button>
-
-                            <button type="button" class="btn btn-outline-primary">
-                                Continuar con Facebook
-                            </button>
-
-                            <button type="button" class="btn btn-outline-dark">
-                                Continuar con Apple
-                            </button>
-
+                        <div class="cuenta-item" onclick="llenarCuenta('20000001','cocina123')">
+                            <span class="cuenta-rol coc-rol">👨‍🍳 Cocinero</span>
+                            <span class="cuenta-datos">DNI: 20000001 · Pass: cocina123</span>
+                            <span class="cuenta-usar">Usar →</span>
                         </div>
-
-                        <!-- AYUDA -->
-                        <p class="text-center mb-2">
-                            <a href="#" class="text-decoration-none">
-                                ¿Problemas para iniciar sesión?
-                            </a>
-                        </p>
-
-                        <!-- TÉRMINOS -->
-                        <p class="text-center small text-muted">
-
-                            Al continuar, aceptas nuestros
-                            <a href="#">Términos</a> y
-                            <a href="#">Política de privacidad</a>
-
-                        </p>
-
-                    </form>
-
+                        <div class="cuenta-item" onclick="llenarCuenta('30000001','mozo123')">
+                            <span class="cuenta-rol moz-rol">🤵 Mozo</span>
+                            <span class="cuenta-datos">DNI: 30000001 · Pass: mozo123</span>
+                            <span class="cuenta-usar">Usar →</span>
+                        </div>
+                    </div>
                 </div>
 
             </div>
 
+            <p class="form-footer">© 2026 Sabor Casero · Sicuani, Cusco, Perú</p>
         </div>
 
     </div>
 
-</body>
+    <!-- Modal de aprobación (Admin) -->
+    <div class="approval-overlay" id="approvalOverlay">
+        <div class="approval-modal">
+            <div class="approval-header">
+                <span class="approval-icon">🔐</span>
+                <h3>Solicitud de Ingreso</h3>
+            </div>
+            <div class="approval-body">
+                <p>El usuario <strong id="approvalUser"></strong> solicita acceso al sistema.</p>
+                <div class="approval-info" id="approvalInfo"></div>
+                <p class="approval-note">Esta aprobación solo será válida <strong>una vez por día</strong>.</p>
+            </div>
+            <div class="approval-actions">
+                <button class="btn-deny"    onclick="resolverAprobacion(false)">✕ Denegar</button>
+                <button class="btn-approve" onclick="resolverAprobacion(true)">✓ Aprobar Ingreso</button>
+            </div>
+        </div>
+    </div>
 
+    <script src="../js/login.js"></script>
+</body>
 </html>
