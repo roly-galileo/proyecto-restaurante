@@ -207,10 +207,22 @@ async function llamarAPI(endpoint, metodo = 'POST', body = null, requiereToken =
             opciones.body = JSON.stringify(body);
         }
 
+        console.log('📤 Request:', {
+            url: `${API_BASE_URL}${endpoint}`,
+            metodo: metodo,
+            body: body,
+            headers: opciones.headers
+        });
+
         const respuesta = await fetch(`${API_BASE_URL}${endpoint}`, opciones);
         
         if (!respuesta.ok) {
-            const data = await respuesta.json();
+            const data = await respuesta.json().catch(() => ({}));
+            console.error('❌ Error Response:', {
+                status: respuesta.status,
+                statusText: respuesta.statusText,
+                data: data
+            });
             throw {
                 status: respuesta.status,
                 message: data.message || 'Error desconocido',
@@ -218,9 +230,11 @@ async function llamarAPI(endpoint, metodo = 'POST', body = null, requiereToken =
             };
         }
 
-        return await respuesta.json();
+        const resultado = await respuesta.json();
+        console.log('✅ Success Response:', resultado);
+        return resultado;
     } catch (error) {
-        console.error('Error en llamada API:', error);
+        console.error('🔴 Error en llamada API:', error);
         throw error;
     }
 }

@@ -3,6 +3,37 @@
    ============================================ */
 'use strict';
 
+// ============ CONFIGURACIÓN ============
+const API_BASE_URL = 'http://192.168.1.37:3000/api';
+
+// Función para cerrar sesión
+function cerrarSesion() {
+    if (!confirm('¿Estás seguro de que quieres cerrar sesión?')) return;
+    
+    // Limpiar localStorage
+    localStorage.removeItem('sc_session');
+    localStorage.removeItem('sc_token');
+    localStorage.removeItem('sc_refresh_token');
+    localStorage.removeItem('sc_device_token');
+    
+    // Limpiar sessionStorage
+    sessionStorage.removeItem('sc_user_role');
+    sessionStorage.removeItem('sc_user_id');
+    sessionStorage.removeItem('sc_user_name');
+    
+    // Redirigir a login
+    window.location.href = 'login.html';
+}
+
+// Verificar si el usuario es admin
+function verificarAdmin() {
+    const rolId = sessionStorage.getItem('sc_user_role');
+    if (rolId !== '1') {
+        alert('No tienes permiso para acceder a esta página');
+        window.location.href = '../html/index.html';
+    }
+}
+
 // ============ DATOS BASE ============
 const COCINEROS = [
     { id: 1, nombre: 'Mario Quispe',    emoji: '👨‍🍳' },
@@ -922,6 +953,296 @@ function cerrarMesaModal() { document.getElementById('mesaModalOverlay').classLi
 function editarReg(tipo, idx) { showToast(`✏ Editando registro ${idx+1} de ${tipo}`); }
 function eliminarReg(tipo, idx) { if (confirm(`¿Eliminar este registro?`)) showToast(`🗑 Registro eliminado`); }
 
+// ============ GESTIÓN DE ROLES ============
+const ROLES = {
+    1: { nombre: 'Admin', color: '#8B4513', emoji: '👑' },
+    2: { nombre: 'Cocinero', color: '#D2691E', emoji: '👨‍🍳' },
+    3: { nombre: 'Mozo', color: '#CD853F', emoji: '🤵' },
+    4: { nombre: 'Cliente', color: '#DEB887', emoji: '👤' }
+};
+
+// Usuarios simulados (en producción vienen del backend)
+let usuarios = [
+    { id: 1, nombre: 'Mario Quispe', apellido: 'Condori', email: 'mario@saborcasero.pe', rolId: 2, dni: '12345678', telefono: '987654321' },
+    { id: 2, nombre: 'Rosa', apellido: 'Mamani', email: 'rosa@saborcasero.pe', rolId: 2, dni: '87654321', telefono: '987654322' },
+    { id: 3, nombre: 'Carlos', apellido: 'Soto', email: 'carlos@saborcasero.pe', rolId: 3, dni: '11223344', telefono: '987654323' },
+    { id: 4, nombre: 'José', apellido: 'Huamán', email: 'jose@saborcasero.pe', rolId: 3, dni: '22334455', telefono: '987654324' },
+    { id: 5, nombre: 'Juan', apellido: 'Pérez', email: 'juan@saborcasero.pe', rolId: 4, dni: '33445566', telefono: '987654325' },
+    { id: 6, nombre: 'María', apellido: 'Gonzalez', email: 'maria@saborcasero.pe', rolId: 4, dni: '44556677', telefono: '987654326' },
+];
+
+// Cargar usuarios desde API
+async function cargarUsuarios() {
+    try {
+        const token = localStorage.getItem('sc_token');
+        const respuesta = await fetch(`${API_BASE_URL}/usuarios`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (respuesta.ok) {
+            usuarios = await respuesta.json();
+        }
+    } catch (error) {
+        console.log('Usando usuarios simulados:', error);
+    }
+    renderizarTablaRoles();
+}
+
+// Renderizar tabla de roles
+function renderizarTablaRoles() {
+    const tbody = document.getElementById('bodyRoles');
+    if (!tbody) return;
+
+    const filtro = document.getElementById('filtroRoles')?.value || 'todos';
+    const busqueda = document.getElementById('searchRoles')?.value?.toLowerCase() || '';
+
+    let usuariosFiltrados = usuarios.filter(u => {
+        const cumpleFiltro = filtro === 'todos' || u.rolId == filtro;
+        const cumpleBusqueda = !busqueda || u.email.toLowerCase().includes(busqueda) || u.nombre.toLowerCase().includes(busqueda);
+        return cumpleFiltro && cumpleBusqueda;
+    });
+
+    tbody.innerHTML = usuariosFiltrados.map(u => {
+        const rol = ROLES[u.rolId];
+        return `
+            <tr>
+                <td><strong>${u.nombre} ${u.apellido || ''}</strong></td>
+                <td>${u.email}</td>
+                <td>
+                    <span style="background: ${rol.color}; color: white; padding: 6px 12px; border-radius: 20px; font-weight: bold; font-size: 12px;">
+                        ${rol.emoji} ${rol.nombre}
+                    </span>
+                </td>
+                <td>${u.dni || '-'}</td>
+                <td>${u.telefono || '-'}</td>
+                <td>
+                    <select class="input-select" style="padding: 6px; border-radius: 4px;" onchange="cambiarRol(${u.id}, this.value)">
+                        <option value="">--Selecciona--</option>
+                        <option value="1" ${u.rolId == 1 ? 'selected' : ''}>👑 Admin</option>
+                        <option value="2" ${u.rolId == 2 ? 'selected' : ''}>👨‍🍳 Cocinero</option>
+                        <option value="3" ${u.rolId == 3 ? 'selected' : ''}>🤵 Mozo</option>
+                        <option value="4" ${u.rolId == 4 ? 'selected' : ''}>👤 Cliente</option>
+                    </select>
+                </td>
+                <td>
+                    <button class="btn-sm" style="background: #FF6B6B; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;" onclick="eliminarUsuario(${u.id})">
+                        🗑 Eliminar
+                    </button>
+                </td>
+            </tr>
+        `;
+    }).join('');
+
+    if (usuariosFiltrados.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 20px;">No hay usuarios para mostrar</td></tr>';
+    }
+}
+
+// Cambiar rol de un usuario
+async function cambiarRol(usuarioId, nuevoRolId) {
+    if (!nuevoRolId) return;
+
+    const usuario = usuarios.find(u => u.id == usuarioId);
+    if (!usuario) return;
+
+    const rolActual = ROLES[usuario.rolId].nombre;
+    const rolNuevo = ROLES[nuevoRolId].nombre;
+
+    try {
+        const token = localStorage.getItem('sc_token');
+        const respuesta = await fetch(`${API_BASE_URL}/usuarios/${usuarioId}/rol`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ rolId: parseInt(nuevoRolId) })
+        });
+
+        if (respuesta.ok) {
+            usuario.rolId = parseInt(nuevoRolId);
+            showToast(`✅ ${usuario.nombre} ahora es ${rolNuevo} (era ${rolActual})`);
+            renderizarTablaRoles();
+        } else {
+            showToast(`❌ Error al cambiar rol. Intenta de nuevo.`);
+        }
+    } catch (error) {
+        console.error('Error al cambiar rol:', error);
+        showToast(`❌ Error de conexión`);
+    }
+}
+
+// Eliminar usuario
+async function eliminarUsuario(usuarioId) {
+    if (!confirm('¿Estás seguro de que quieres eliminar este usuario?')) return;
+
+    try {
+        const token = localStorage.getItem('sc_token');
+        const respuesta = await fetch(`${API_BASE_URL}/usuarios/${usuarioId}`, {
+            method: 'DELETE',
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (respuesta.ok) {
+            usuarios = usuarios.filter(u => u.id !== usuarioId);
+            showToast(`✅ Usuario eliminado correctamente`);
+            renderizarTablaRoles();
+        }
+    } catch (error) {
+        console.error('Error al eliminar usuario:', error);
+        showToast(`❌ Error al eliminar usuario`);
+    }
+}
+
+// Agregar event listener al filtro de roles
+document.addEventListener('DOMContentLoaded', () => {
+    const searchRoles = document.getElementById('searchRoles');
+    const filtroRoles = document.getElementById('filtroRoles');
+
+    if (searchRoles) searchRoles.addEventListener('input', renderizarTablaRoles);
+    if (filtroRoles) filtroRoles.addEventListener('change', renderizarTablaRoles);
+    
+    // Listeners para la pestaña de nuevo usuario
+    renderNuevosUsuarios();
+});
+
+// ============ GESTIÓN DE NUEVO USUARIO ============
+let nuevosUsuarios = [];
+
+async function registrarNuevoUsuario() {
+    const nombre = document.getElementById('nuevoUserNombre')?.value?.trim() || '';
+    const apellido = document.getElementById('nuevoUserApellido')?.value?.trim() || '';
+    const email = document.getElementById('nuevoUserEmail')?.value?.trim() || '';
+    const password = document.getElementById('nuevoUserPassword')?.value || '';
+    const rol = document.getElementById('nuevoUserRol')?.value || '';
+    const telefono = document.getElementById('nuevoUserTelefono')?.value?.trim() || '';
+    const dni = document.getElementById('nuevoUserDNI')?.value?.trim() || '';
+
+    // Validaciones
+    if (!nombre || !apellido || !email || !password || !rol) {
+        showToast('❌ Completa todos los campos requeridos');
+        return;
+    }
+
+    // Validar email básico
+    if (!email.includes('@')) {
+        showToast('❌ Email no válido');
+        return;
+    }
+
+    // Validar contraseña (mínimo 6 caracteres)
+    if (password.length < 6) {
+        showToast('❌ La contraseña debe tener al menos 6 caracteres');
+        return;
+    }
+
+    try {
+        console.log('📤 Enviando solicitud POST /auth/register con datos:', {
+            nombre, apellido, email, rol, telefono, dni
+        });
+
+        const response = await fetch(`${API_BASE_URL}/auth/register`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                nombre,
+                apellido,
+                email,
+                password,
+                rolId: parseInt(rol),
+                telefono: telefono || null,
+                dni: dni || null
+            })
+        });
+
+        console.log('Respuesta del servidor:', response.status, response.statusText);
+        const data = await response.json();
+        
+        if (!response.ok) {
+            console.log('🔴 Error en respuesta:', data);
+            showToast(`❌ Error: ${data.mensaje || data.message || 'No se pudo crear el usuario'}`);
+            return;
+        }
+
+        console.log('✅ Usuario creado exitosamente');
+
+        // Agregar a la tabla local
+        const nuevoUsuario = {
+            id: data.id || Date.now(),
+            nombre,
+            apellido,
+            email,
+            rol: parseInt(rol),
+            telefono,
+            dni,
+            fechaRegistro: new Date().toLocaleDateString('es-PE')
+        };
+        
+        nuevosUsuarios.unshift(nuevoUsuario);
+        
+        // Limpiar formulario
+        document.getElementById('nuevoUserNombre').value = '';
+        document.getElementById('nuevoUserApellido').value = '';
+        document.getElementById('nuevoUserEmail').value = '';
+        document.getElementById('nuevoUserPassword').value = '';
+        document.getElementById('nuevoUserRol').value = '';
+        document.getElementById('nuevoUserTelefono').value = '';
+        document.getElementById('nuevoUserDNI').value = '';
+        
+        renderNuevosUsuarios();
+        showToast(`✅ Usuario ${nombre} ${apellido} creado exitosamente`);
+
+    } catch (error) {
+        console.error('❌ Error en registrarNuevoUsuario:', error);
+        showToast('❌ Error de conexión al servidor');
+    }
+}
+
+function renderNuevosUsuarios() {
+    const tbody = document.getElementById('bodyNuevosUsuarios');
+    if (!tbody) return;
+
+    if (nuevosUsuarios.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 30px; color: #999;">📭 No hay usuarios registrados aún</td></tr>';
+        return;
+    }
+
+    const ROLES_MAP = {
+        1: '🔐 Administrador',
+        2: '👨‍🍳 Cocinero',
+        3: '🤵 Mozo',
+        4: '👤 Cliente'
+    };
+
+    tbody.innerHTML = nuevosUsuarios.map(usuario => {
+        const rolNombre = ROLES_MAP[usuario.rol] || 'Desconocido';
+        
+        return `
+            <tr>
+                <td><strong>${usuario.nombre} ${usuario.apellido}</strong></td>
+                <td>${usuario.email}</td>
+                <td>${rolNombre}</td>
+                <td>${usuario.telefono || '—'}</td>
+                <td>${usuario.fechaRegistro}</td>
+                <td>
+                    <button class="btn-sm btn-danger" onclick="eliminarNuevoUsuario('${usuario.email}')" title="Eliminar">
+                        🗑️ Eliminar
+                    </button>
+                </td>
+            </tr>
+        `;
+    }).join('');
+}
+
+function eliminarNuevoUsuario(email) {
+    if (!confirm(`¿Eliminar usuario con email ${email}?`)) return;
+
+    nuevosUsuarios = nuevosUsuarios.filter(u => u.email !== email);
+    renderNuevosUsuarios();
+    showToast('✅ Usuario eliminado de la lista');
+}
+
 // ============ TOAST ============
 let toastTimer;
 function showToast(msg) {
@@ -934,6 +1255,25 @@ function showToast(msg) {
 
 // ============ INIT ============
 function init() {
+    // Verificar que sea admin
+    verificarAdmin();
+    
+    // Cargar nombre del usuario
+    const sesion = localStorage.getItem('sc_session');
+    if (sesion) {
+        try {
+            const data = JSON.parse(sesion);
+            if (data.usuario) {
+                const nombreCompleto = `${data.usuario.nombre || ''} ${data.usuario.apellido || ''}`.trim();
+                document.getElementById('userName').textContent = nombreCompleto || data.usuario.nombre || 'Administrador';
+                document.getElementById('userAvatar').textContent = (data.usuario.nombre?.charAt(0) || 'A').toUpperCase();
+            }
+        } catch (e) {
+            console.error('Error al cargar datos del usuario:', e);
+        }
+    }
+    
+    // Cargar datos del panel
     renderChipsCocineros();
     renderCola();
     renderMesas();
@@ -945,6 +1285,8 @@ function init() {
     renderCaja();
     actualizarReporte();
     renderDashboard();
+    cargarUsuarios(); // Cargar tabla de roles
+    renderNuevosUsuarios(); // Renderizar tabla de nuevos usuarios
 }
 
 document.addEventListener('DOMContentLoaded', init);

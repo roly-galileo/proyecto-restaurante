@@ -1,12 +1,411 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <meta name="description" content="Sabor Casero - Panel de Cocineros">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/admin.css">
+    <title>Sabor Casero – Panel de Cocina</title>
 </head>
 <body>
-    <h2></h2>
-    <div></div>
+
+    <!-- ============ SIDEBAR ============ -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-logo">
+            <span class="logo-icon">🍴</span>
+            <span class="logo-text">Sabor Casero</span>
+        </div>
+
+        <nav class="sidebar-nav">
+            <p class="nav-label">Cocina</p>
+            <ul>
+                <li><a href="#" class="nav-item active" data-section="cola-pedidos">
+                    <span class="nav-icon">🔥</span><span>Cola de Pedidos</span>
+                    <span class="nav-badge" id="badgeCola">0</span>
+                </a></li>
+                <li><a href="#" class="nav-item" data-section="estadisticas">
+                    <span class="nav-icon">📊</span><span>Mi Rendimiento</span>
+                </a></li>
+            </ul>
+
+            <p class="nav-label">Acceso Rápido</p>
+            <ul>
+                <li><a href="index.html" class="nav-item">
+                    <span class="nav-icon">🏠</span><span>Ir al Sitio</span>
+                </a></li>
+            </ul>
+        </nav>
+
+        <div class="sidebar-user">
+            <div class="user-avatar" id="userAvatar">C</div>
+            <div class="user-info">
+                <p class="user-name" id="userName">Cocinero</p>
+                <p class="user-role">Chef</p>
+            </div>
+            <button class="btn-logout" id="btnLogout" title="Cerrar sesión" onclick="cerrarSesion()">🚪</button>
+        </div>
+    </aside>
+
+    <!-- ============ MAIN CONTENT ============ -->
+    <div class="main-wrapper">
+
+        <header class="topbar">
+            <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
+                <span></span><span></span><span></span>
+            </button>
+            <div class="topbar-title">
+                <h1 id="pageTitle">Cola de Pedidos</h1>
+                <p id="pageBreadcrumb">Sabor Casero / Cocina</p>
+            </div>
+            <div class="topbar-actions">
+                <span class="topbar-date" id="currentDate"></span>
+                <span class="topbar-clock" id="currentTime"></span>
+            </div>
+        </header>
+
+        <!-- ======================================================
+             COLA DE PEDIDOS
+        ====================================================== -->
+        <section class="content-section active" id="section-cola-pedidos">
+            <div class="section-intro">
+                <h2>🔥 Cola de Pedidos – Cocina</h2>
+                <p>Selecciona tu nombre, toma un pedido y márcalo como listo.</p>
+            </div>
+
+            <!-- Selector de cocinero activo -->
+            <div class="cocinero-activo-bar">
+                <label class="coc-bar-label">¿Quién está en cocina ahora?</label>
+                <div class="cocinero-chips" id="cocineroChips"></div>
+            </div>
+
+            <!-- Filtros -->
+            <div class="cola-filtros">
+                <button class="filtro-btn active" data-filtro="todos">Todos</button>
+                <button class="filtro-btn" data-filtro="pendiente">🕐 Pendiente</button>
+                <button class="filtro-btn" data-filtro="tomado">👨‍🍳 Mi Cola</button>
+                <button class="filtro-btn" data-filtro="listo">✅ Listo para Servir</button>
+            </div>
+
+            <div class="cola-header">
+                <div class="cola-stats">
+                    <span class="cola-stat"><span id="countPend">0</span> pendientes</span>
+                    <span class="cola-divider">·</span>
+                    <span class="cola-stat"><span id="countProc">0</span> en mi cola</span>
+                    <span class="cola-divider">·</span>
+                    <span class="cola-stat cok"><span id="countList">0</span> listos</span>
+                </div>
+            </div>
+
+            <div class="cola-container" id="colaPedidos"></div>
+        </section>
+
+        <!-- ======================================================
+             ESTADÍSTICAS
+        ====================================================== -->
+        <section class="content-section" id="section-estadisticas">
+            <div class="section-intro">
+                <h2>📊 Mi Rendimiento Hoy</h2>
+                <p>Estadísticas de tu desempeño en cocina.</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card stat-gold">
+                    <div class="stat-icon">🍽</div>
+                    <div class="stat-data">
+                        <p class="stat-num" id="misPlatosPrep">0</p>
+                        <p class="stat-label">Platos Preparados</p>
+                    </div>
+                </div>
+                <div class="stat-card stat-green">
+                    <div class="stat-icon">⏱</div>
+                    <div class="stat-data">
+                        <p class="stat-num" id="tiempoPromedio">--</p>
+                        <p class="stat-label">Tiempo Promedio</p>
+                    </div>
+                </div>
+                <div class="stat-card stat-blue">
+                    <div class="stat-icon">🎯</div>
+                    <div class="stat-data">
+                        <p class="stat-num" id="eficiencia">--%</p>
+                        <p class="stat-label">Eficiencia</p>
+                    </div>
+                </div>
+                <div class="stat-card stat-red">
+                    <div class="stat-icon">⭐</div>
+                    <div class="stat-data">
+                        <p class="stat-num" id="calificacion">5.0</p>
+                        <p class="stat-label">Calificación</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-wrap" style="margin-top: 30px;">
+                <h3 class="sub-title">Últimos Pedidos Completados</h3>
+                <table class="data-table">
+                    <thead><tr>
+                        <th>Pedido</th><th>Mesa</th><th>Platos</th><th>Tiempo</th><th>Estado</th>
+                    </tr></thead>
+                    <tbody id="bodyUltimoPedidos"></tbody>
+                </table>
+            </div>
+        </section>
+
+    </div><!-- fin main-wrapper -->
+
+    <div class="toast" id="toast"></div>
+    <script src="../js/admin.js"></script>
+    <script>
+        /* ============================================
+           COCINEROS.JS - Panel de Cocina
+        ============================================ */
+
+        let miCocineroId = null;
+        let pedidosCompletados = [];
+
+        // Verificar que sea cocinero
+        function verificarCocinero() {
+            const rolId = sessionStorage.getItem('sc_user_role');
+            if (rolId !== '2') {
+                alert('No tienes permiso para acceder a esta página');
+                window.location.href = '../html/index.html';
+            }
+        }
+
+        // Cerrar sesión
+        function cerrarSesion() {
+            if (!confirm('¿Estás seguro de que quieres cerrar sesión?')) return;
+            
+            localStorage.removeItem('sc_session');
+            localStorage.removeItem('sc_token');
+            localStorage.removeItem('sc_refresh_token');
+            localStorage.removeItem('sc_device_token');
+            sessionStorage.removeItem('sc_user_role');
+            sessionStorage.removeItem('sc_user_id');
+            sessionStorage.removeItem('sc_user_name');
+            
+            window.location.href = 'login.html';
+        }
+
+        // Renderizar chips de cocineros
+        function renderChipsCocineros() {
+            const chips = document.getElementById('cocineroChips');
+            if (!chips) return;
+
+            chips.innerHTML = COCINEROS.map(c => `
+                <button 
+                    class="chef-chip ${miCocineroId === c.id ? 'activo' : ''}" 
+                    onclick="seleccionarCocinero(${c.id})"
+                    style="padding: 8px 16px; border-radius: 20px; border: 2px solid #D2691E; background: ${miCocineroId === c.id ? '#D2691E' : 'white'}; color: ${miCocineroId === c.id ? 'white' : '#8B4513'}; cursor: pointer; font-weight: 600; transition: 0.3s;"
+                >
+                    ${c.emoji} ${c.nombre}
+                </button>
+            `).join('');
+        }
+
+        // Seleccionar cocinero activo
+        function seleccionarCocinero(cocineroId) {
+            miCocineroId = cocineroId;
+            renderChipsCocineros();
+            renderColaPedidos();
+            showToast(`👨‍🍳 ${COCINEROS.find(c => c.id === cocineroId).nombre} está en cocina`);
+        }
+
+        // Renderizar cola de pedidos
+        function renderColaPedidos() {
+            const container = document.getElementById('colaPedidos');
+            if (!container) return;
+
+            const filtro = document.querySelector('.filtro-btn.active')?.dataset.filtro || 'todos';
+            
+            let pedidosFiltrados = pedidos;
+            if (filtro === 'pendiente') {
+                pedidosFiltrados = pedidos.filter(p => p.estado === 'pendiente');
+            } else if (filtro === 'tomado') {
+                pedidosFiltrados = pedidos.filter(p => p.cocineros.includes(miCocineroId));
+            } else if (filtro === 'listo') {
+                pedidosFiltrados = pedidos.filter(p => p.estado === 'listo');
+            }
+
+            // Actualizar badges
+            document.getElementById('countPend').textContent = pedidos.filter(p => p.estado === 'pendiente').length;
+            document.getElementById('countProc').textContent = pedidos.filter(p => p.cocineros.includes(miCocineroId)).length;
+            document.getElementById('countList').textContent = pedidos.filter(p => p.estado === 'listo').length;
+
+            container.innerHTML = pedidosFiltrados.map(p => {
+                const tiengoEste = p.cocineros.includes(miCocineroId);
+                const tiempoTranscurrido = Math.floor((Date.now() - p.inicio) / 60000);
+
+                return `
+                    <div class="pedido-card pedido-${p.estado}" style="margin-bottom: 20px; padding: 20px; border-radius: 8px; border-left: 4px solid #D2691E; background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px;">
+                            <div>
+                                <h4 style="margin: 0; color: #8B4513; font-size: 18px;">${p.id} - ${p.mesa}</h4>
+                                <p style="margin: 5px 0; color: #999; font-size: 13px;">Mozo: ${p.mozo}</p>
+                            </div>
+                            <span style="background: #8B4513; color: white; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: bold;">⏱ ${tiempoTranscurrido} min</span>
+                        </div>
+
+                        <div style="background: #fef7f2; padding: 15px; border-radius: 6px; margin-bottom: 15px;">
+                            ${p.items.map(item => `
+                                <div style="margin-bottom: 8px; font-size: 14px;">
+                                    <strong>${item.cant}x ${item.plato}</strong>
+                                    ${item.nota ? `<span style="color: #D2691E; font-size: 12px; margin-left: 10px;">📝 ${item.nota}</span>` : ''}
+                                </div>
+                            `).join('')}
+                        </div>
+
+                        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                            ${p.estado === 'pendiente' ? `
+                                <button class="btn-primary" onclick="tomarPedido('${p.id}')" style="flex: 1; padding: 10px; border: none; border-radius: 6px; cursor: pointer; background: #D2691E; color: white; font-weight: 600;">
+                                    👨‍🍳 Tomar Pedido
+                                </button>
+                            ` : ''}
+                            
+                            ${tiengoEste && p.estado !== 'listo' ? `
+                                <button class="btn-primary" onclick="marcarListo('${p.id}')" style="flex: 1; padding: 10px; border: none; border-radius: 6px; cursor: pointer; background: #4CAF50; color: white; font-weight: 600;">
+                                    ✅ Marcar Listo
+                                </button>
+                            ` : ''}
+                            
+                            ${p.estado === 'listo' ? `
+                                <button class="btn-primary" onclick="despacharPedido('${p.id}')" style="flex: 1; padding: 10px; border: none; border-radius: 6px; cursor: pointer; background: #2196F3; color: white; font-weight: 600;">
+                                    🚀 Despachar
+                                </button>
+                            ` : ''}
+                        </div>
+
+                        ${p.cocineros.length > 0 ? `
+                            <div style="margin-top: 10px; font-size: 12px; color: #999;">
+                                👨‍🍳 Cocineros: ${p.cocineros.map(id => COCINEROS.find(c => c.id === id)?.nombre).join(', ')}
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }).join('');
+
+            if (pedidosFiltrados.length === 0) {
+                container.innerHTML = '<div style="text-align: center; padding: 60px 20px; color: #999;"><p style="font-size: 48px;">✨</p><p>No hay pedidos en esta categoría</p></div>';
+            }
+        }
+
+        // Tomar pedido
+        function tomarPedido(pedidoId) {
+            if (!miCocineroId) {
+                showToast('⚠️ Primero selecciona tu nombre');
+                return;
+            }
+
+            const pedido = pedidos.find(p => p.id === pedidoId);
+            if (pedido) {
+                pedido.estado = 'tomado';
+                if (!pedido.cocineros.includes(miCocineroId)) {
+                    pedido.cocineros.push(miCocineroId);
+                }
+                showToast(`✅ Pedido ${pedidoId} tomado por ${COCINEROS.find(c => c.id === miCocineroId).nombre}`);
+                renderColaPedidos();
+            }
+        }
+
+        // Marcar como listo
+        function marcarListo(pedidoId) {
+            const pedido = pedidos.find(p => p.id === pedidoId);
+            if (pedido) {
+                pedido.estado = 'listo';
+                showToast(`✅ Pedido ${pedidoId} listo para servir`);
+                pedidosCompletados.push(pedido);
+                renderColaPedidos();
+                actualizarEstadisticas();
+            }
+        }
+
+        // Despachar pedido
+        function despacharPedido(pedidoId) {
+            const pedido = pedidos.find(p => p.id === pedidoId);
+            if (pedido) {
+                pedido.estado = 'despachado';
+                showToast(`🚀 Pedido ${pedidoId} despachado`);
+                renderColaPedidos();
+            }
+        }
+
+        // Actualizar estadísticas
+        function actualizarEstadisticas() {
+            const misPedidos = pedidosCompletados;
+            document.getElementById('misPlatosPrep').textContent = misPedidos.length;
+            
+            if (misPedidos.length > 0) {
+                const tiempoProm = Math.round(misPedidos.reduce((sum, p) => sum + (Date.now() - p.inicio), 0) / misPedidos.length / 60000);
+                document.getElementById('tiempoPromedio').textContent = `${tiempoProm} min`;
+            }
+
+            document.getElementById('eficiencia').textContent = Math.floor(Math.random() * 30 + 70) + '%';
+            
+            const tbody = document.getElementById('bodyUltimoPedidos');
+            if (tbody) {
+                tbody.innerHTML = misPedidos.slice(-5).reverse().map(p => {
+                    const tiempo = Math.floor((Date.now() - p.inicio) / 60000);
+                    return `
+                        <tr>
+                            <td>${p.id}</td>
+                            <td>${p.mesa}</td>
+                            <td>${p.items.map(i => i.plato).join(', ')}</td>
+                            <td>${tiempo} min</td>
+                            <td>✅ Completado</td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            verificarCocinero();
+
+            const sesion = localStorage.getItem('sc_session');
+            if (sesion) {
+                try {
+                    const data = JSON.parse(sesion);
+                    if (data.usuario) {
+                        const nombreCompleto = `${data.usuario.nombre || ''} ${data.usuario.apellido || ''}`.trim();
+                        document.getElementById('userName').textContent = nombreCompleto || data.usuario.nombre || 'Cocinero';
+                        document.getElementById('userAvatar').textContent = (data.usuario.nombre?.charAt(0) || 'C').toUpperCase();
+                    }
+                } catch (e) {
+                    console.error('Error:', e);
+                }
+            }
+
+            renderChipsCocineros();
+            renderColaPedidos();
+            actualizarEstadisticas();
+
+            document.querySelectorAll('.filtro-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.filtro-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    renderColaPedidos();
+                });
+            });
+
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const section = item.dataset.section;
+                    document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+                    document.getElementById(`section-${section}`).classList.add('active');
+                    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+                    item.classList.add('active');
+                    document.getElementById('pageTitle').textContent = item.textContent.trim();
+                });
+            });
+
+            setInterval(() => {
+                const now = new Date();
+                document.getElementById('currentTime').textContent = now.toLocaleTimeString('es-PE');
+                document.getElementById('currentDate').textContent = now.toLocaleDateString('es-PE');
+            }, 1000);
+        });
+    </script>
 </body>
 </html>
