@@ -49,12 +49,12 @@
         </nav>
 
         <div class="sidebar-user">
-            <div class="user-avatar">A</div>
+            <div class="user-avatar" id="userAvatar">A</div>
             <div class="user-info">
-                <p class="user-name">Administrador</p>
-                <p class="user-role">Super Admin</p>
+                <p class="user-name" id="userName">Administrador</p>
+                <p class="user-role" id="userRole">Super Admin</p>
             </div>
-            <button class="btn-logout" title="Cerrar sesión">↩</button>
+            <button class="btn-logout" id="btnLogout" title="Cerrar sesión" onclick="cerrarSesion()">🚪</button>
         </div>
     </aside>
 
@@ -262,6 +262,8 @@
             <div class="subtabs">
                 <button class="subtab active" data-tab="adm-reportes">📈 Reportes</button>
                 <button class="subtab" data-tab="adm-empleados">👥 Empleados</button>
+                <button class="subtab" data-tab="adm-nuevo-usuario">➕ Nuevo Usuario</button>
+                <button class="subtab" data-tab="adm-roles">🔐 Asignar Roles</button>
                 <button class="subtab" data-tab="adm-caja">💰 Caja</button>
                 <button class="subtab" data-tab="adm-reservas">📅 Reservas</button>
             </div>
@@ -329,6 +331,101 @@
                             <th>Total</th><th>Método</th><th>Estado</th>
                         </tr></thead>
                         <tbody id="bodyTransacciones"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- NUEVO USUARIO -->
+            <div class="subtab-content" id="adm-nuevo-usuario">
+                <div class="section-intro">
+                    <h3 class="sub-title">Registrar Nuevo Usuario</h3>
+                    <p>Agrega nuevos trabajadores al sistema con su rol correspondiente.</p>
+                </div>
+
+                <div class="form-section" style="max-width: 600px; margin-bottom: 40px;">
+                    <div class="form-group">
+                        <label class="form-label">Nombre Completo *</label>
+                        <input type="text" class="form-input" id="nuevoUserNombre" placeholder="Juan">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Apellido *</label>
+                        <input type="text" class="form-input" id="nuevoUserApellido" placeholder="García">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Correo Electrónico *</label>
+                        <input type="email" class="form-input" id="nuevoUserEmail" placeholder="juan@example.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Contraseña *</label>
+                        <input type="password" class="form-input" id="nuevoUserPassword" placeholder="••••••••">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Rol del Usuario *</label>
+                        <select class="input-select" id="nuevoUserRol" style="width: 100%;">
+                            <option value="">-- Seleccionar rol --</option>
+                            <option value="1">👑 Administrador</option>
+                            <option value="2">👨‍🍳 Cocinero</option>
+                            <option value="3">🤵 Mozo</option>
+                            <option value="4">👤 Cliente</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Teléfono (Opcional)</label>
+                        <input type="tel" class="form-input" id="nuevoUserTelefono" placeholder="999999999">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">DNI (Opcional)</label>
+                        <input type="text" class="form-input" id="nuevoUserDNI" placeholder="12345678">
+                    </div>
+
+                    <button class="btn-primary" onclick="registrarNuevoUsuario()" style="width: 100%; padding: 12px; margin-top: 20px; font-size: 16px;">
+                        ✅ Crear Usuario
+                    </button>
+                </div>
+
+                <div style="border-top: 2px solid #ddd; padding-top: 30px;">
+                    <h3 class="sub-title">Usuarios Registrados Recientemente</h3>
+                    <div class="table-wrap">
+                        <table class="data-table">
+                            <thead><tr>
+                                <th>Nombre</th><th>Email</th><th>Rol</th><th>Teléfono</th><th>Fecha Registro</th><th>Acciones</th>
+                            </tr></thead>
+                            <tbody id="bodyNuevosUsuarios"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GESTIÓN DE ROLES -->
+            <div class="subtab-content" id="adm-roles">
+                <div class="toolbar">
+                    <input type="text" class="search-input" placeholder="Buscar usuario por email o nombre..." id="searchRoles">
+                    <select class="input-select" id="filtroRoles">
+                        <option value="todos">Todos los usuarios</option>
+                        <option value="1">Admin</option>
+                        <option value="2">Cocinero</option>
+                        <option value="3">Mozo</option>
+                        <option value="4">Cliente</option>
+                    </select>
+                </div>
+                <div class="table-wrap">
+                    <table class="data-table">
+                        <thead><tr>
+                            <th>Nombre</th>
+                            <th>Email</th>
+                            <th>Rol Actual</th>
+                            <th>DNI</th>
+                            <th>Teléfono</th>
+                            <th>Cambiar Rol</th>
+                            <th>Acciones</th>
+                        </tr></thead>
+                        <tbody id="bodyRoles"></tbody>
                     </table>
                 </div>
             </div>

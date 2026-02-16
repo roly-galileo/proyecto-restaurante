@@ -6,6 +6,216 @@
     <title>Sabor Casero – Acceso al Panel</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/login.css">
+    <style>
+        /* Estilos para tabs */
+        .form-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            border-bottom: 2px solid rgba(212, 165, 116, 0.2);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 15px 20px;
+            border: none;
+            background: transparent;
+            color: #999;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            position: relative;
+            bottom: -2px;
+        }
+
+        .tab-btn:hover {
+            color: #d4a574;
+        }
+
+        .tab-btn.active {
+            color: #d4a574;
+            border-bottom-color: #d4a574;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .progress-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+
+        .progress-step {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: #999;
+        }
+
+        .progress-step.active {
+            color: #d4a574;
+            font-weight: bold;
+        }
+
+        .progress-step.completed {
+            color: #4caf50;
+        }
+
+        .step-number {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            border: 2px solid currentColor;
+        }
+
+        .progress-step.completed .step-number {
+            background-color: #4caf50;
+            border-color: #4caf50;
+            color: white;
+        }
+
+        .progress-step.active .step-number {
+            background-color: #d4a574;
+            border-color: #d4a574;
+            color: white;
+        }
+
+        .form-section {
+            display: none;
+        }
+
+        .form-section.active {
+            display: block;
+        }
+
+        .two-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        @media (max-width: 600px) {
+            .two-columns {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-footer-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn-secondary {
+            flex: 1;
+            padding: 12px 20px;
+            border: 2px solid #d4a574;
+            background: transparent;
+            color: #d4a574;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: rgba(212, 165, 116, 0.1);
+        }
+
+        .btn-secondary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .code-timer {
+            font-size: 12px;
+            color: #999;
+            margin-top: 8px;
+        }
+
+        .code-timer.warning {
+            color: #ff9800;
+            font-weight: bold;
+        }
+
+        .resend-code {
+            background: none;
+            border: none;
+            color: #d4a574;
+            cursor: pointer;
+            text-decoration: underline;
+            font-size: 14px;
+            padding: 0;
+            margin-top: 8px;
+        }
+
+        .resend-code:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .password-strength {
+            margin-top: 8px;
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            display: none;
+        }
+
+        .password-strength.show {
+            display: block;
+        }
+
+        .password-strength.weak {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+
+        .password-strength.medium {
+            background-color: #fff3e0;
+            color: #e65100;
+        }
+
+        .password-strength.strong {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 14px;
+            color: #999;
+        }
+
+        .register-link button {
+            background: none;
+            border: none;
+            color: #d4a574;
+            text-decoration: underline;
+            cursor: pointer;
+            font-weight: 600;
+            padding: 0;
+        }
+
+        .register-link button:hover {
+            text-decoration: none;
+        }
+    </style>
 </head>
 <body>
 
@@ -53,82 +263,218 @@
         <div class="form-panel">
             <div class="form-card">
 
-                <div class="form-header">
-                    <h2>Bienvenido</h2>
-                    <p>Ingresa con tu DNI y contraseña asignada</p>
-                </div>
-
-                <!-- Alerta de sesión pendiente (admin) -->
-                <div class="alert alert-warn" id="alertPendiente" style="display:none">
-                    <span class="alert-icon">⏳</span>
-                    <div>
-                        <strong>Aprobación pendiente</strong><br>
-                        <small>Tu solicitud de ingreso fue enviada al administrador.</small>
-                    </div>
-                </div>
-
-                <!-- Alerta de error -->
-                <div class="alert alert-error" id="alertError" style="display:none">
-                    <span class="alert-icon">⚠</span>
-                    <div id="alertErrorMsg">DNI o contraseña incorrectos.</div>
-                </div>
-
-                <!-- Alerta de éxito -->
-                <div class="alert alert-success" id="alertSuccess" style="display:none">
-                    <span class="alert-icon">✅</span>
-                    <div id="alertSuccessMsg">Acceso concedido. Redirigiendo...</div>
-                </div>
-
-                <form id="loginForm" autocomplete="off">
-
-                    <div class="field-group">
-                        <label for="inputDNI">DNI</label>
-                        <div class="input-wrap">
-                            <span class="input-icon">🪪</span>
-                            <input type="text" id="inputDNI" placeholder="Ingresa tu DNI" maxlength="8" inputmode="numeric">
-                        </div>
-                    </div>
-
-                    <div class="field-group">
-                        <label for="inputPass">Contraseña</label>
-                        <div class="input-wrap">
-                            <span class="input-icon">🔒</span>
-                            <input type="password" id="inputPass" placeholder="Contraseña asignada">
-                            <button type="button" class="toggle-pass" id="togglePass" aria-label="Mostrar contraseña">👁</button>
-                        </div>
-                    </div>
-
-                    <button type="submit" class="btn-login" id="btnLogin">
-                        <span class="btn-login-text">Ingresar al Panel</span>
-                        <span class="btn-login-icon">→</span>
-                        <div class="btn-spinner" id="btnSpinner"></div>
+                <!-- TABS -->
+                <div class="form-tabs">
+                    <button type="button" class="tab-btn active" onclick="cambiarTab('login')">
+                        🔐 Iniciar Sesión
                     </button>
-
-                </form>
-
-                <!-- Cuentas de prueba -->
-                <div class="cuentas-prueba">
-                    <button class="cuentas-toggle" onclick="toggleCuentas()">
-                        <span>📋 Cuentas de prueba</span>
-                        <span class="toggle-arrow" id="cuentasArrow">▼</span>
+                    <button type="button" class="tab-btn" onclick="cambiarTab('register')">
+                        📝 Crear Cuenta
                     </button>
-                    <div class="cuentas-lista" id="cuentasLista">
-                        <div class="cuenta-item" onclick="llenarCuenta('10000001','admin123')">
-                            <span class="cuenta-rol admin-rol">🏢 Admin</span>
-                            <span class="cuenta-datos">DNI: 10000001 · Pass: admin123</span>
-                            <span class="cuenta-usar">Usar →</span>
+                </div>
+
+                <!-- ===== TAB LOGIN ===== -->
+                <div id="loginTab" class="tab-content active">
+                    <div class="form-header">
+                        <h2>Bienvenido</h2>
+                        <p>Ingresa con tu email y contraseña</p>
+                    </div>
+
+                    <!-- Alerta de error -->
+                    <div class="alert alert-error" id="alertError" style="display:none">
+                        <span class="alert-icon">⚠</span>
+                        <div id="alertErrorMsg">Email o contraseña incorrectos.</div>
+                    </div>
+
+                    <!-- Alerta de éxito -->
+                    <div class="alert alert-success" id="alertSuccess" style="display:none">
+                        <span class="alert-icon">✅</span>
+                        <div id="alertSuccessMsg">Acceso concedido. Redirigiendo...</div>
+                    </div>
+
+                    <form id="loginForm" autocomplete="off">
+
+                        <div class="field-group">
+                            <label for="inputEmail">Email</label>
+                            <div class="input-wrap">
+                                <span class="input-icon">📧</span>
+                                <input type="email" id="inputEmail" placeholder="tu@email.com">
+                            </div>
                         </div>
-                        <div class="cuenta-item" onclick="llenarCuenta('20000001','cocina123')">
-                            <span class="cuenta-rol coc-rol">👨‍🍳 Cocinero</span>
-                            <span class="cuenta-datos">DNI: 20000001 · Pass: cocina123</span>
-                            <span class="cuenta-usar">Usar →</span>
+
+                        <div class="field-group">
+                            <label for="inputPass">Contraseña</label>
+                            <div class="input-wrap">
+                                <span class="input-icon">🔒</span>
+                                <input type="password" id="inputPass" placeholder="Tu contraseña">
+                                <button type="button" class="toggle-pass" id="togglePass" aria-label="Mostrar contraseña">👁</button>
+                            </div>
                         </div>
-                        <div class="cuenta-item" onclick="llenarCuenta('30000001','mozo123')">
-                            <span class="cuenta-rol moz-rol">🤵 Mozo</span>
-                            <span class="cuenta-datos">DNI: 30000001 · Pass: mozo123</span>
-                            <span class="cuenta-usar">Usar →</span>
+
+                        <button type="submit" class="btn-login" id="btnLogin">
+                            <span class="btn-login-text">Ingresar al Panel</span>
+                            <span class="btn-login-icon">→</span>
+                            <div class="btn-spinner" id="btnSpinner"></div>
+                        </button>
+
+                    </form>
+
+                    <!-- Cuentas de prueba -->
+                    <div class="cuentas-prueba">
+                        <button class="cuentas-toggle" onclick="toggleCuentas()">
+                            <span>📋 Cuentas de prueba</span>
+                            <span class="toggle-arrow" id="cuentasArrow">▼</span>
+                        </button>
+                        <div class="cuentas-lista" id="cuentasLista">
+                            <div class="cuenta-item" onclick="llenarCuenta('admin@saborasero.com','admin123')">
+                                <span class="cuenta-rol admin-rol">🏢 Admin</span>
+                                <span class="cuenta-datos">Email: admin@saborasero.com · Pass: admin123</span>
+                                <span class="cuenta-usar">Usar →</span>
+                            </div>
+                            <div class="cuenta-item" onclick="llenarCuenta('cocinero@saborasero.com','cocina123')">
+                                <span class="cuenta-rol coc-rol">👨‍🍳 Cocinero</span>
+                                <span class="cuenta-datos">Email: cocinero@saborasero.com · Pass: cocina123</span>
+                                <span class="cuenta-usar">Usar →</span>
+                            </div>
+                            <div class="cuenta-item" onclick="llenarCuenta('mozo@saborasero.com','mozo123')">
+                                <span class="cuenta-rol moz-rol">🤵 Mozo</span>
+                                <span class="cuenta-datos">Email: mozo@saborasero.com · Pass: mozo123</span>
+                                <span class="cuenta-usar">Usar →</span>
+                            </div>
                         </div>
                     </div>
+                </div>
+
+                <!-- ===== TAB REGISTRO ===== -->
+                <div id="registerTab" class="tab-content">
+                    <div class="form-header">
+                        <h2>Crear Cuenta</h2>
+                        <p>Completa el registro en dos pasos</p>
+                    </div>
+
+                    <!-- Barra de progreso -->
+                    <div class="progress-bar">
+                        <div class="progress-step active" id="step1Indicator">
+                            <div class="step-number">1</div>
+                            <span>Email</span>
+                        </div>
+                        <div class="progress-step" id="step2Indicator">
+                            <div class="step-number">2</div>
+                            <span>Datos</span>
+                        </div>
+                    </div>
+
+                    <!-- Alerta de error (registro) -->
+                    <div class="alert alert-error" id="alertErrorReg" style="display:none">
+                        <span class="alert-icon">⚠</span>
+                        <div id="alertErrorMsgReg">Error en el registro.</div>
+                    </div>
+
+                    <!-- Alerta de éxito (registro) -->
+                    <div class="alert alert-success" id="alertSuccessReg" style="display:none">
+                        <span class="alert-icon">✅</span>
+                        <div id="alertSuccessMsgReg">¡Cuenta creada exitosamente!</div>
+                    </div>
+
+                    <!-- PASO 1: Email y Código -->
+                    <form id="step1Form" class="form-section active">
+                        <div class="field-group">
+                            <label for="inputEmailReg">Email</label>
+                            <div class="input-wrap">
+                                <span class="input-icon">📧</span>
+                                <input type="email" id="inputEmailReg" placeholder="tu@email.com" required>
+                            </div>
+                        </div>
+
+                        <div class="field-group">
+                            <label for="inputCode">Código de Verificación</label>
+                            <div class="input-wrap">
+                                <span class="input-icon">🔐</span>
+                                <input type="text" id="inputCode" placeholder="123456" maxlength="6" inputmode="numeric" style="display:none;">
+                            </div>
+                            <div class="code-timer" id="codeTimer" style="display:none;">
+                                Código expira en: <span id="timerDisplay">10:00</span>
+                            </div>
+                            <button type="button" class="resend-code" id="btnRequestCode">📨 Solicitar código</button>
+                            <button type="button" class="resend-code" id="btnResendCode" style="display:none;">🔄 Reenviar código</button>
+                        </div>
+
+                        <div class="form-footer-actions">
+                            <button type="button" class="btn-secondary" onclick="volverAlLogin()">Cancelar</button>
+                            <button type="submit" class="btn-login" id="btnStep1Next" style="display:none;">
+                                <span class="btn-login-text">Continuar</span>
+                                <span class="btn-login-icon">→</span>
+                                <div class="btn-spinner" id="btnSpinner1"></div>
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- PASO 2: Datos Personales -->
+                    <form id="step2Form" class="form-section">
+                        <div class="two-columns">
+                            <div class="field-group">
+                                <label for="inputNombre">Nombre *</label>
+                                <div class="input-wrap">
+                                    <span class="input-icon">👤</span>
+                                    <input type="text" id="inputNombre" placeholder="Juan" required>
+                                </div>
+                            </div>
+                            <div class="field-group">
+                                <label for="inputApellido">Apellido *</label>
+                                <div class="input-wrap">
+                                    <span class="input-icon">👤</span>
+                                    <input type="text" id="inputApellido" placeholder="Pérez" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="two-columns">
+                            <div class="field-group">
+                                <label for="inputDNIReg">DNI *</label>
+                                <div class="input-wrap">
+                                    <span class="input-icon">🪪</span>
+                                    <input type="text" id="inputDNIReg" placeholder="12345678" maxlength="8" inputmode="numeric" required>
+                                </div>
+                            </div>
+                            <div class="field-group">
+                                <label for="inputTelefono">Teléfono *</label>
+                                <div class="input-wrap">
+                                    <span class="input-icon">📞</span>
+                                    <input type="tel" id="inputTelefono" placeholder="+51999999999" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="field-group">
+                            <label for="inputPasswordReg">Contraseña *</label>
+                            <div class="input-wrap">
+                                <span class="input-icon">🔒</span>
+                                <input type="password" id="inputPasswordReg" placeholder="Mínimo 8 caracteres" required>
+                                <button type="button" class="toggle-pass" id="togglePassReg" aria-label="Mostrar contraseña">👁</button>
+                            </div>
+                            <div class="password-strength" id="passwordStrength">
+                                <span id="strengthText">Contraseña débil</span>
+                            </div>
+                        </div>
+
+                        <div class="field-group">
+                            <label for="inputPasswordConfirm">Confirmar Contraseña *</label>
+                            <div class="input-wrap">
+                                <span class="input-icon">🔒</span>
+                                <input type="password" id="inputPasswordConfirm" placeholder="Confirma tu contraseña" required>
+                                <span id="confirmIcon" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%);"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-footer-actions">
+                            <button type="button" class="btn-secondary" onclick="volverAlPaso1()">← Atrás</button>
+                            <button type="submit" class="btn-login" id="btnRegister">
+                                <span class="btn-login-text">Registrarse</span>
+                                <span class="btn-login-icon">✓</span>
+                                <div class="btn-spinner" id="btnSpinner2"></div>
+                            </button>
+                        </div>
+                    </form>
                 </div>
 
             </div>
@@ -138,25 +484,66 @@
 
     </div>
 
-    <!-- Modal de aprobación (Admin) -->
-    <div class="approval-overlay" id="approvalOverlay">
-        <div class="approval-modal">
-            <div class="approval-header">
-                <span class="approval-icon">🔐</span>
-                <h3>Solicitud de Ingreso</h3>
-            </div>
-            <div class="approval-body">
-                <p>El usuario <strong id="approvalUser"></strong> solicita acceso al sistema.</p>
-                <div class="approval-info" id="approvalInfo"></div>
-                <p class="approval-note">Esta aprobación solo será válida <strong>una vez por día</strong>.</p>
-            </div>
-            <div class="approval-actions">
-                <button class="btn-deny"    onclick="resolverAprobacion(false)">✕ Denegar</button>
-                <button class="btn-approve" onclick="resolverAprobacion(true)">✓ Aprobar Ingreso</button>
-            </div>
-        </div>
-    </div>
-
     <script src="../js/login.js"></script>
+    <script src="../js/register.js"></script>
+    <script>
+        // Cambiar entre tabs
+        function cambiarTab(tab) {
+            // Ocultar todos los tabs
+            const loginTab = document.getElementById('loginTab');
+            const registerTab = document.getElementById('registerTab');
+            
+            if (loginTab) loginTab.classList.remove('active');
+            if (registerTab) registerTab.classList.remove('active');
+
+            // Desactivar botones
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+
+            // Mostrar tab activo
+            if (tab === 'login') {
+                if (loginTab) loginTab.classList.add('active');
+                document.querySelectorAll('.tab-btn')[0].classList.add('active');
+                // Limpiar alertas del registro
+                ['alertErrorReg', 'alertSuccessReg'].forEach(id => {
+                    const elem = document.getElementById(id);
+                    if (elem) elem.style.display = 'none';
+                });
+            } else if (tab === 'register') {
+                if (registerTab) registerTab.classList.add('active');
+                document.querySelectorAll('.tab-btn')[1].classList.add('active');
+                // Limpiar alertas del login
+                ['alertError', 'alertSuccess'].forEach(id => {
+                    const elem = document.getElementById(id);
+                    if (elem) elem.style.display = 'none';
+                });
+                if (typeof mostrarPaso === 'function') {
+                    mostrarPaso(1);
+                }
+            }
+        }
+
+        // Volver al login desde registro
+        function volverAlLogin() {
+            cambiarTab('login');
+        }
+
+        // Ir a paso 1 del registro
+        function volverAlPaso1() {
+            if (typeof mostrarPaso === 'function') {
+                mostrarPaso(1);
+            }
+            if (typeof limpiarPaso2 === 'function') {
+                limpiarPaso2();
+            }
+        }
+
+        // Detectar parámetro en URL para abrir registro
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('tab') === 'register') {
+                cambiarTab('register');
+            }
+        });
+    </script>
 </body>
 </html>
