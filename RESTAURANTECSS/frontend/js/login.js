@@ -1,74 +1,27 @@
 /* ============================================
    SABOR CASERO – LOGIN.JS
-   Sistema de autenticación por roles
+   Sistema de autenticación por API
    ============================================ */
 'use strict';
 
 /* ====================================================
-   CUENTAS POR DEFECTO (temporal – sin backend)
-   Formato: { dni, password, nombre, rol, panel }
-   rol: 'admin' | 'cocinero' | 'mozo'
-   panel: sección a mostrar en admin.html
-   ====================================================
-   ⚠ NOTA: Al integrar backend, reemplazar este objeto
-   por una llamada a la API de validación.
+   CONFIGURACIÓN DE API
 ==================================================== */
-const USUARIOS = [
-    {
-        dni:      '10000001',
-        password: 'admin123',
-        nombre:   'Administrador General',
-        cargo:    'Administrador',
-        rol:      'admin',
-        panel:    'dashboard'         // ve todo
-    },
-    {
-        dni:      '20000001',
-        password: 'cocina123',
-        nombre:   'Mario Quispe Huanca',
-        cargo:    'Cocinero',
-        rol:      'cocinero',
-        panel:    'cocineros'         // solo sección cocineros
-    },
-    {
-        dni:      '20000002',
-        password: 'cocina456',
-        nombre:   'Rosa Mamani Ccori',
-        cargo:    'Cocinera',
-        rol:      'cocinero',
-        panel:    'cocineros'
-    },
-    {
-        dni:      '30000001',
-        password: 'mozo123',
-        nombre:   'Carlos Soto Puma',
-        cargo:    'Mozo',
-        rol:      'mozo',
-        panel:    'mozos'            // solo sección mozos
-    },
-    {
-        dni:      '30000002',
-        password: 'mozo456',
-        nombre:   'Ana Lima Ramos',
-        cargo:    'Mozza',
-        rol:      'mozo',
-        panel:    'mozos'
-    },
-];
+const API_BASE_URL = 'http://192.168.1.37:3000/api';
+const ENDPOINTS = {
+    LOGIN: '/auth/login',
+    REFRESH_TOKEN: '/auth/refresh-token',
+    LOGOUT: '/auth/logout'
+};
 
 /* ====================================================
-   CLAVE DE SESIÓN EN localStorage
-   Se guarda: { dni, nombre, rol, panel, fecha, aprobado }
-   'aprobado' solo importa para admin (único acceso por día)
+   CLAVES DE SESIÓN EN localStorage
+   Se guarda: { token, refreshToken, tokenDispositivo, usuario: { id, nombre, rolId }, fecha }
 ==================================================== */
 const SESSION_KEY = 'sc_session';
-const APPROVAL_KEY = 'sc_admin_approved'; // guarda la fecha de aprobación admin
-
-/* ====================================================
-   VARIABLES GLOBALES
-==================================================== */
-let usuarioPendiente = null;   // usuario esperando aprobación admin
-let aprobacionResolver = null; // resolve de la promesa de aprobación
+const TOKEN_KEY = 'sc_token';
+const REFRESH_TOKEN_KEY = 'sc_refresh_token';
+const DEVICE_TOKEN_KEY = 'sc_device_token';
 
 /* ====================================================
    PARTÍCULAS DE FONDO
@@ -96,23 +49,31 @@ function crearParticulas() {
 ==================================================== */
 function showAlert(tipo, msg) {
     // Ocultar todas
-    ['alertPendiente','alertError','alertSuccess'].forEach(id => {
-        document.getElementById(id).style.display = 'none';
+    ['alertError','alertSuccess'].forEach(id => {
+        const elem = document.getElementById(id);
+        if (elem) elem.style.display = 'none';
     });
     if (tipo === 'error') {
-        document.getElementById('alertErrorMsg').innerHTML = msg;
-        document.getElementById('alertError').style.display = 'flex';
+        const alertError = document.getElementById('alertError');
+        if (alertError) {
+            document.getElementById('alertErrorMsg').innerHTML = msg;
+            alertError.style.display = 'flex';
+        }
     } else if (tipo === 'success') {
-        document.getElementById('alertSuccessMsg').innerHTML = msg;
-        document.getElementById('alertSuccess').style.display = 'flex';
-    } else if (tipo === 'pendiente') {
-        document.getElementById('alertPendiente').style.display = 'flex';
-    } else {
-        // ocultar todas (ya hecho arriba)
+        const alertSuccess = document.getElementById('alertSuccess');
+        if (alertSuccess) {
+            document.getElementById('alertSuccessMsg').innerHTML = msg;
+            alertSuccess.style.display = 'flex';
+        }
     }
 }
 
-function hideAlerts() { showAlert('none'); }
+function hideAlerts() { 
+    ['alertError','alertSuccess'].forEach(id => {
+        const elem = document.getElementById(id);
+        if (elem) elem.style.display = 'none';
+    });
+}
 
 function setLoading(loading) {
     const btn    = document.getElementById('btnLogin');
@@ -145,13 +106,15 @@ document.getElementById('togglePass').addEventListener('click', function () {
 /* ====================================================
    LLENAR CUENTA DE PRUEBA
 ==================================================== */
-function llenarCuenta(dni, pass) {
-    document.getElementById('inputDNI').value  = dni;
+function llenarCuenta(email, pass) {
+    document.getElementById('inputEmail').value = email;
     document.getElementById('inputPass').value = pass;
     hideAlerts();
     // Cerrar panel
-    document.getElementById('cuentasLista').classList.remove('open');
-    document.getElementById('cuentasArrow').classList.remove('open');
+    const lista = document.getElementById('cuentasLista');
+    const arrow = document.getElementById('cuentasArrow');
+    if (lista) lista.classList.remove('open');
+    if (arrow) arrow.classList.remove('open');
     // Focus en el botón
     document.getElementById('btnLogin').focus();
 }
@@ -162,28 +125,26 @@ function llenarCuenta(dni, pass) {
 function toggleCuentas() {
     const lista  = document.getElementById('cuentasLista');
     const arrow  = document.getElementById('cuentasArrow');
-    lista.classList.toggle('open');
-    arrow.classList.toggle('open');
+    if (lista) lista.classList.toggle('open');
+    if (arrow) arrow.classList.toggle('open');
 }
 
 /* ====================================================
-   LÓGICA DE SESIÓN
+   LÓGICA DE SESIÓN CON TOKENS
 ==================================================== */
-function fechaHoy() {
-    return new Date().toISOString().split('T')[0]; // YYYY-MM-DD
-}
-
-function guardarSesion(usuario, aprobado = true) {
+function guardarSesion(authResponse) {
     const sesion = {
-        dni:       usuario.dni,
-        nombre:    usuario.nombre,
-        cargo:     usuario.cargo,
-        rol:       usuario.rol,
-        panel:     usuario.panel,
-        fecha:     fechaHoy(),
-        aprobado,
+        token: authResponse.token,
+        refreshToken: authResponse.refreshToken,
+        tokenDispositivo: authResponse.tokenDispositivo,
+        usuario: authResponse.usuario,
+        expiresInMs: authResponse.expiresInMs,
+        timestamp: Date.now()
     };
     localStorage.setItem(SESSION_KEY, JSON.stringify(sesion));
+    localStorage.setItem(TOKEN_KEY, authResponse.token);
+    localStorage.setItem(REFRESH_TOKEN_KEY, authResponse.refreshToken);
+    localStorage.setItem(DEVICE_TOKEN_KEY, authResponse.tokenDispositivo);
     return sesion;
 }
 
@@ -192,147 +153,176 @@ function leerSesion() {
         const raw = localStorage.getItem(SESSION_KEY);
         if (!raw) return null;
         const s = JSON.parse(raw);
-        // Sesión válida si es del mismo día
-        if (s.fecha !== fechaHoy()) {
+        
+        // Validar si el token aún es válido (no ha pasado su tiempo de expiración)
+        const ahora = Date.now();
+        const tiempoZonaMuerta = 60000; // 1 minuto de margen
+        if (ahora - s.timestamp > (s.expiresInMs - tiempoZonaMuerta)) {
+            // Token expirado
             localStorage.removeItem(SESSION_KEY);
             return null;
         }
         return s;
-    } catch { return null; }
+    } catch { 
+        return null; 
+    }
+}
+
+function obtenerToken() {
+    return localStorage.getItem(TOKEN_KEY);
+}
+
+function obtenerRefreshToken() {
+    return localStorage.getItem(REFRESH_TOKEN_KEY);
 }
 
 function cerrarSesion() {
     localStorage.removeItem(SESSION_KEY);
+    localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(REFRESH_TOKEN_KEY);
+    localStorage.removeItem(DEVICE_TOKEN_KEY);
 }
 
 /* ====================================================
-   APROBACIÓN DE ADMIN (modal)
-   Simula que el admin ve la solicitud y aprueba/deniega.
-   En producción esto sería una llamada WebSocket o polling.
+   FUNCIONES DE API
 ==================================================== */
-function mostrarAprobacionAdmin(usuario) {
-    return new Promise((resolve) => {
-        aprobacionResolver = resolve;
-        document.getElementById('approvalUser').textContent = `${usuario.nombre} (DNI: ${usuario.dni})`;
-        document.getElementById('approvalInfo').innerHTML = `
-            <div>👤 <strong>Nombre:</strong> ${usuario.nombre}</div>
-            <div>🪪 <strong>DNI:</strong> ${usuario.dni}</div>
-            <div>💼 <strong>Cargo:</strong> ${usuario.cargo}</div>
-            <div>📅 <strong>Fecha:</strong> ${new Date().toLocaleDateString('es-PE', { weekday:'long', year:'numeric', month:'long', day:'numeric' })}</div>
-            <div>🕒 <strong>Hora:</strong> ${new Date().toLocaleTimeString('es-PE')}</div>
-        `;
-        document.getElementById('approvalOverlay').classList.add('open');
-    });
-}
+async function llamarAPI(endpoint, metodo = 'POST', body = null, requiereToken = false) {
+    try {
+        const opciones = {
+            method: metodo,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        };
 
-function resolverAprobacion(aprobado) {
-    document.getElementById('approvalOverlay').classList.remove('open');
-    if (aprobacionResolver) {
-        aprobacionResolver(aprobado);
-        aprobacionResolver = null;
+        if (requiereToken) {
+            const token = obtenerToken();
+            if (!token) {
+                throw new Error('No hay token disponible');
+            }
+            opciones.headers['Authorization'] = `Bearer ${token}`;
+        }
+
+        if (body) {
+            opciones.body = JSON.stringify(body);
+        }
+
+        const respuesta = await fetch(`${API_BASE_URL}${endpoint}`, opciones);
+        
+        if (!respuesta.ok) {
+            const data = await respuesta.json();
+            throw {
+                status: respuesta.status,
+                message: data.message || 'Error desconocido',
+                data: data
+            };
+        }
+
+        return await respuesta.json();
+    } catch (error) {
+        console.error('Error en llamada API:', error);
+        throw error;
     }
 }
 
 /* ====================================================
-   VERIFICAR SI EL ADMIN YA FUE APROBADO HOY
+   LOGIN CON API
 ==================================================== */
-function adminAprobadoHoy() {
-    try {
-        const raw = localStorage.getItem(APPROVAL_KEY);
-        if (!raw) return false;
-        const data = JSON.parse(raw);
-        return data.fecha === fechaHoy();
-    } catch { return false; }
-}
-
-function guardarAprobacionAdmin() {
-    localStorage.setItem(APPROVAL_KEY, JSON.stringify({ fecha: fechaHoy() }));
-}
-
-/* ====================================================
-   PROCESO DE LOGIN PRINCIPAL
-==================================================== */
-async function procesarLogin(dni, password) {
+async function procesarLogin(email, password) {
     hideAlerts();
     setLoading(true);
 
-    // Simular latencia de red
-    await delay(700);
+    try {
+        // Simular latencia mínima de UI
+        await delay(300);
 
-    // Buscar usuario
-    const usuario = USUARIOS.find(u => u.dni === dni && u.password === password);
+        // Llamar a la API de login
+        const respuesta = await llamarAPI(ENDPOINTS.LOGIN, 'POST', {
+            email: email,
+            password: password
+        });
 
-    if (!usuario) {
+        // Validar respuesta
+        if (!respuesta.token || !respuesta.refreshToken) {
+            throw new Error('Respuesta de servidor inválida: tokens no recibidos');
+        }
+
+        // Guardar sesión con los tokens
+        guardarSesion(respuesta);
+
+        setLoading(false);
+        showAlert('success', `✅ Bienvenido, <strong>${respuesta.usuario.nombre}</strong>. Redirigiendo...`);
+        await delay(1200);
+        redirigirAlPanel(respuesta.usuario);
+
+    } catch (error) {
         setLoading(false);
         sacudirFormulario();
-        showAlert('error', '⚠ DNI o contraseña incorrectos. Verifica tus datos.');
-        document.getElementById('inputPass').value = '';
-        return;
-    }
 
-    /* ---------- ROL: ADMIN ---------- */
-    if (usuario.rol === 'admin') {
-        // ¿Ya fue aprobado hoy?
-        if (adminAprobadoHoy()) {
-            // Acceso directo (aprobación única por día ya consumida)
-            setLoading(false);
-            guardarSesion(usuario, true);
-            showAlert('success', `✅ Bienvenido, <strong>${usuario.nombre}</strong>. Redirigiendo...`);
-            await delay(1200);
-            redirigirAlPanel(usuario);
-        } else {
-            // Necesita aprobación
-            setLoading(false);
-            showAlert('pendiente');
+        let mensajeError = 'Error en la autenticación. Intenta nuevamente.';
 
-            // Mostrar modal de aprobación (en demo, el mismo usuario lo aprueba)
-            const aprobado = await mostrarAprobacionAdmin(usuario);
-
-            if (aprobado) {
-                guardarAprobacionAdmin();
-                guardarSesion(usuario, true);
-                showAlert('success', `✅ Acceso aprobado. Bienvenido, <strong>${usuario.nombre}</strong>.`);
-                await delay(1200);
-                redirigirAlPanel(usuario);
+        if (error.status === 400) {
+            mensajeError = '⚠ Credenciales incompletas. Verifica email y contraseña.';
+        } else if (error.status === 401) {
+            if (error.message.includes('inactivo')) {
+                mensajeError = '🚫 El usuario está inactivo. Contacta al administrador.';
             } else {
-                showAlert('error', '🚫 Ingreso denegado por el administrador.');
+                mensajeError = '⚠ Email o contraseña incorrectos.';
             }
+        } else if (error.status === 404) {
+            mensajeError = '⚠ Usuario no encontrado.';
+        } else if (error.message && error.message.includes('Failed to fetch')) {
+            mensajeError = '❌ No se pudo conectar al servidor. Verifica tu conexión.';
         }
-        return;
-    }
 
-    /* ---------- ROL: COCINERO / MOZO ---------- */
-    guardarSesion(usuario, true);
-    setLoading(false);
-    showAlert('success', `✅ Bienvenido, <strong>${usuario.nombre}</strong>. Redirigiendo...`);
-    await delay(1100);
-    redirigirAlPanel(usuario);
+        showAlert('error', mensajeError);
+        document.getElementById('inputPass').value = '';
+    }
 }
 
 function redirigirAlPanel(usuario) {
-    // Guardar el panel objetivo en sessionStorage para que admin.js lo lea
-    sessionStorage.setItem('sc_target_panel', usuario.panel);
-    window.location.href = 'admin.html';
+    // Guardar el rol y ID en sessionStorage
+    sessionStorage.setItem('sc_user_role', usuario.rolId);
+    sessionStorage.setItem('sc_user_id', usuario.id);
+    sessionStorage.setItem('sc_user_name', usuario.nombre);
+    
+    // Redirigir según el rol
+    // rolId 1 = Admin, 2 = Empleados, 3 = Clientes
+    switch(usuario.rolId) {
+        case 1:
+            window.location.href = 'admin.html';
+            break;
+        case 2:
+            window.location.href = 'cocineros.html';
+            break;
+        case 3:
+            window.location.href = 'usuario.html';
+            break;
+        default:
+            window.location.href = 'index.html';
+    }
 }
 
-function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+function delay(ms) { 
+    return new Promise(r => setTimeout(r, ms)); 
+}
 
 /* ====================================================
    SUBMIT DEL FORMULARIO
 ==================================================== */
 document.getElementById('loginForm').addEventListener('submit', function (e) {
     e.preventDefault();
-    const dni  = document.getElementById('inputDNI').value.trim();
-    const pass = document.getElementById('inputPass').value;
+    const email = document.getElementById('inputEmail').value.trim();
+    const pass  = document.getElementById('inputPass').value;
 
     // Validaciones básicas
-    if (!dni) {
-        showAlert('error', 'Por favor ingresa tu DNI.');
-        document.getElementById('inputDNI').focus();
+    if (!email) {
+        showAlert('error', 'Por favor ingresa tu email.');
+        document.getElementById('inputEmail').focus();
         return;
     }
-    if (dni.length < 8) {
-        showAlert('error', 'El DNI debe tener 8 dígitos.');
+    if (!email.includes('@')) {
+        showAlert('error', 'El email no es válido.');
         sacudirFormulario();
         return;
     }
@@ -342,12 +332,7 @@ document.getElementById('loginForm').addEventListener('submit', function (e) {
         return;
     }
 
-    procesarLogin(dni, pass);
-});
-
-// Solo números en DNI
-document.getElementById('inputDNI').addEventListener('input', function () {
-    this.value = this.value.replace(/\D/g, '').slice(0, 8);
+    procesarLogin(email, pass);
 });
 
 // Enter en password = submit
@@ -362,10 +347,26 @@ document.getElementById('inputPass').addEventListener('keydown', function (e) {
 ==================================================== */
 function verificarSesionExistente() {
     const sesion = leerSesion();
-    if (sesion && sesion.aprobado) {
-        // Ya tiene sesión: ir directo al panel
-        sessionStorage.setItem('sc_target_panel', sesion.panel);
-        window.location.href = 'admin.html';
+    if (sesion && sesion.token) {
+        // Ya tiene sesión: ir directo al panel según su rol
+        sessionStorage.setItem('sc_user_role', sesion.usuario.rolId);
+        sessionStorage.setItem('sc_user_id', sesion.usuario.id);
+        sessionStorage.setItem('sc_user_name', sesion.usuario.nombre);
+        
+        // Redirigir según el rol
+        switch(sesion.usuario.rolId) {
+            case 1:
+                window.location.href = 'admin.html';
+                break;
+            case 2:
+                window.location.href = 'cocineros.html';
+                break;
+            case 3:
+                window.location.href = 'usuario.html';
+                break;
+            default:
+                window.location.href = 'index.html';
+        }
     }
 }
 

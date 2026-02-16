@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sabor Casero - Panel de Usuario">
+    
+    <!-- FUENTES EXTERNAS -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+
+    <!-- Estilos -->
+    <link rel="stylesheet" href="../css/styles.css">
+    <style>
+        /* User Panel Styles */
+        .user-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .user-header {
+            background: linear-gradient(135deg, #8B4513 0%, #D2691E 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 10px;
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-avatar {
+            width: 80px;
+            height: 80px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+        }
+
+        .user-details h2 {
+            margin: 0;
+            font-size: 28px;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .user-details p {
+            margin: 5px 0;
+            opacity: 0.9;
+        }
+
+        .logout-btn {
+            background: white;
+            color: #8B4513;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: #f0f0f0;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .user-header {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        .card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .card h3 {
+            font-family: 'Playfair Display', serif;
+            color: #8B4513;
+            margin-bottom: 20px;
+            font-size: 24px;
+            border-bottom: 2px solid #D2691E;
+            padding-bottom: 10px;
+        }
+
+        .points-display {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .points-number {
+            font-size: 48px;
+            color: #D2691E;
+            font-weight: bold;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .points-label {
+            color: #666;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: #e0e0e0;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 15px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #D2691E 0%, #8B4513 100%);
+            width: 60%;
+            transition: width 0.3s;
+        }
+
+        .promo-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .promo-item {
+            border: 2px solid #D2691E;
+            border-radius: 8px;
+            padding: 15px;
+            background: #fef7f2;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .promo-item:hover {
+            box-shadow: 0 4px 12px rgba(210, 105, 30, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .promo-content h4 {
+            margin: 0;
+            color: #8B4513;
+            font-size: 16px;
+        }
+
+        .promo-content p {
+            margin: 5px 0 0 0;
+            color: #666;
+            font-size: 13px;
+        }
+
+        .promo-code {
+            background: #D2691E;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .orders-section {
+            grid-column: 1 / -1;
+        }
+
+        .order-item {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .order-info h4 {
+            margin: 0;
+            color: #8B4513;
+        }
+
+        .order-info p {
+            margin: 5px 0 0 0;
+            color: #666;
+            font-size: 13px;
+        }
+
+        .order-status {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-completed {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .no-content {
+            text-align: center;
+            color: #999;
+            padding: 30px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 30px;
+            color: #666;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #D2691E;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 10px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+    </style>
+
+    <title>Mi Cuenta - Sabor Casero</title>
+</head>
+
+<body>
+
+    <!-- ================= SPLASH SCREEN ================= -->
+    <div id="splash">
+        <div class="splash-inner">
+            <img src="../img/img-removebg-preview.png" alt="Logo Sabor Casero" class="splash-logo">
+            <p class="splash-text">Sabor Casero</p>
+            <div class="splash-loader">
+                <div class="loader-bar"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="contenido">
+
+        <!-- ================= HEADER ================= -->
+        <header class="top-bar">
+            <div class="top-bar-content">
+                <p class="contact-info">
+                    📞 <a href="tel:449135">449 135</a>
+                    &nbsp;|&nbsp;
+                    ✉ <a href="mailto:administracion@saborcasero.pe">administracion@saborcasero.pe</a>
+                </p>
+                <div class="social-icons">
+                    <a href="#" aria-label="Facebook" class="social-link">
+                        <img src="https://img.icons8.com/color/48/000000/facebook.png" alt="Facebook">
+                    </a>
+                    <a href="#" aria-label="Instagram" class="social-link">
+                        <img src="https://img.icons8.com/color/48/000000/instagram.png" alt="Instagram">
+                    </a>
+                    <a href="#" aria-label="Twitter" class="social-link">
+                        <img src="https://img.icons8.com/color/48/000000/twitter.png" alt="Twitter">
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <!-- ================= MENÚ PRINCIPAL ================= -->
+        <nav class="menu-principal" id="mainNav">
+            <div class="menu-container">
+                <div class="logo-menu">
+                    <span class="logo-icon">🍴</span>
+                    <span class="logo-text">Sabor Casero</span>
+                </div>
+
+                <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú" aria-expanded="false">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+
+                <ul id="menuNav" role="menubar">
+                    <li role="none"><a href="index.html" role="menuitem">Inicio</a></li>
+                    <li role="none"><a href="reservas.html" role="menuitem">Reservaciones</a></li>
+                    <li role="none"><a href="promos.html" role="menuitem">Promociones</a></li>
+                    <li role="none"><a href="usuario.html" class="reserva-btn" role="menuitem">👤 Mi Cuenta</a></li>
+                    <li role="none"><a href="#" id="logoutBtn" class="login-btn" role="menuitem">🚪 Cerrar Sesión</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- ================= USER PANEL ================= -->
+        <div class="user-container">
+
+            <!-- User Header -->
+            <div class="user-header">
+                <div class="user-info">
+                    <div class="user-avatar">👤</div>
+                    <div class="user-details">
+                        <h2 id="userName">Cargando...</h2>
+                        <p id="userEmail">usuario@example.com</p>
+                        <p id="userRole">Cliente</p>
+                    </div>
+                </div>
+                <button class="logout-btn" id="logoutBtnHeader">Cerrar Sesión</button>
+            </div>
+
+            <!-- Content Grid -->
+            <div class="content-grid">
+
+                <!-- Puntos Acumulados -->
+                <div class="card">
+                    <h3>🎁 Puntos Acumulados</h3>
+                    <div class="points-display">
+                        <div class="points-number" id="pointsNumber">0</div>
+                        <div class="points-label">Puntos disponibles</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                        <p style="margin-top: 10px; font-size: 12px; color: #666;">
+                            <span id="pointsToNextLevel">--</span> puntos para siguiente nivel
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Promociones Disponibles -->
+                <div class="card">
+                    <h3>🎉 Promociones Activas</h3>
+                    <div class="promo-list" id="promoList">
+                        <div class="no-content">
+                            <div class="empty-icon">📋</div>
+                            <p>No hay promociones disponibles</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Historial de Pedidos -->
+                <div class="card orders-section">
+                    <h3>📦 Historial de Pedidos</h3>
+                    <div id="ordersList">
+                        <div class="no-content">
+                            <div class="empty-icon">🍽️</div>
+                            <p>Aún no tienes pedidos</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ================= FOOTER ================= -->
+        <footer class="footer">
+            <p>&copy; 2024 Sabor Casero. Todos los derechos reservados.</p>
+            <p>Sicuani - Cusco - Perú</p>
+        </footer>
+
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="../js/splash.js"></script>
+    <script src="../js/script.js"></script>
+    <script>
+        /* ====================================================
+           USUARIO.JS - Panel de Usuario Cliente
+        ==================================================== */
+        const API_BASE_URL = 'http://192.168.1.37:3000/api';
+
+        // Obtener datos del localStorage
+        function obtenerToken() {
+            return localStorage.getItem('sc_token');
+        }
+
+        function obtenerDatos() {
+            const sesion = localStorage.getItem('sc_session');
+            if (sesion) {
+                try {
+                    return JSON.parse(sesion);
+                } catch (e) {
+                    return null;
+                }
+            }
+            return null;
+        }
+
+        // Verificar sesión
+        function verificarSesion() {
+            const sesion = obtenerDatos();
+            const rolId = sessionStorage.getItem('sc_user_role');
+            
+            if (!sesion || !obtenerToken() || rolId !== '3') {
+                window.location.href = 'login.html';
+                return null;
+            }
+            return sesion;
+        }
+
+        // Cargar perfil del usuario desde el backend
+        function cargarPerfil(sesion) {
+            if (sesion && sesion.usuario) {
+                const usuario = sesion.usuario;
+                const nombreCompleto = `${usuario.nombre || ''} ${usuario.apellido || ''}`.trim();
+                
+                document.getElementById('userName').textContent = nombreCompleto || usuario.nombre || 'Usuario';
+                document.getElementById('userEmail').textContent = usuario.email || 'email@example.com';
+                
+                // Mostrar información adicional si existe
+                let infoAdicional = 'Cliente';
+                if (usuario.dni) {
+                    infoAdicional += ` • DNI: ${usuario.dni}`;
+                }
+                if (usuario.telefono) {
+                    infoAdicional = `${infoAdicional} • ${usuario.telefono}`;
+                }
+                document.getElementById('userRole').textContent = infoAdicional;
+            }
+        }
+
+        // Cargar puntos desde API o datos del usuario
+        async function cargarPuntos() {
+            const sesion = obtenerDatos();
+            if (!sesion || !sesion.usuario) return;
+
+            const usuario = sesion.usuario;
+            
+            // Intentar obtener puntos del backend si existe el endpoint
+            let puntos = usuario.puntos || 0;
+            
+            // Si no hay puntos, calcular basado en el ID del usuario (para demo)
+            if (puntos === 0 && usuario.id) {
+                puntos = (usuario.id * 150) + Math.floor(Math.random() * 100);
+            }
+            
+            document.getElementById('pointsNumber').textContent = puntos;
+            
+            // Calcular progreso
+            const proximoNivel = Math.ceil(puntos / 500) * 500;
+            const ptosParaNivel = proximoNivel - puntos;
+            document.getElementById('pointsToNextLevel').textContent = ptosParaNivel;
+            
+            // Progress bar
+            const porcentaje = ((puntos % 500) / 500) * 100;
+            document.getElementById('progressFill').style.width = porcentaje + '%';
+        }
+
+        // Cargar promociones desde API
+        async function cargarPromociones() {
+            const token = obtenerToken();
+            
+            try {
+                // Intentar obtener promociones del backend
+                const respuesta = await fetch(`${API_BASE_URL}/promos`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (respuesta.ok) {
+                    const promos = await respuesta.json();
+                    mostrarPromociones(promos);
+                } else {
+                    // Si no hay datos, mostrar vacío
+                    mostrarPromociones([]);
+                }
+            } catch (error) {
+                console.log('No se pudieron cargar promociones del backend:', error);
+                mostrarPromociones([]);
+            }
+        }
+
+        function mostrarPromociones(promos) {
+            const promoList = document.getElementById('promoList');
+            promoList.innerHTML = '';
+
+            if (!promos || promos.length === 0) {
+                promoList.innerHTML = `
+                    <div class="no-content">
+                        <div class="empty-icon">📋</div>
+                        <p>No hay promociones disponibles en este momento</p>
+                    </div>
+                `;
+            } else {
+                promos.forEach(promo => {
+                    const el = document.createElement('div');
+                    el.className = 'promo-item';
+                    el.innerHTML = `
+                        <div class="promo-content">
+                            <h4>${promo.titulo || promo.nombre || 'Promoción'}</h4>
+                            <p>${promo.descripcion || 'Ver detalles'}</p>
+                        </div>
+                        <div class="promo-code">${promo.codigo || 'PROMO'}</div>
+                    `;
+                    promoList.appendChild(el);
+                });
+            }
+        }
+
+        // Cargar historial de pedidos desde API
+        async function cargarPedidos() {
+            const token = obtenerToken();
+            const usuarioId = sessionStorage.getItem('sc_user_id');
+            
+            try {
+                // Intentar obtener pedidos del backend
+                const respuesta = await fetch(`${API_BASE_URL}/pedidos?usuario_id=${usuarioId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (respuesta.ok) {
+                    const pedidos = await respuesta.json();
+                    mostrarPedidos(pedidos);
+                } else {
+                    mostrarPedidos([]);
+                }
+            } catch (error) {
+                console.log('No se pudieron cargar pedidos del backend:', error);
+                mostrarPedidos([]);
+            }
+        }
+
+        function mostrarPedidos(pedidos) {
+            const ordersList = document.getElementById('ordersList');
+            ordersList.innerHTML = '';
+
+            if (!pedidos || pedidos.length === 0) {
+                ordersList.innerHTML = `
+                    <div class="no-content">
+                        <div class="empty-icon">🍽️</div>
+                        <p>Aún no tienes pedidos realizados</p>
+                    </div>
+                `;
+            } else {
+                pedidos.forEach(pedido => {
+                    const estado = (pedido.estado || 'pending').toLowerCase();
+                    const statusText = estado === 'completed' || estado === 'entregado' ? '✅ Entregado' : '⏳ Pendiente';
+                    const statusClass = estado === 'completed' || estado === 'entregado' ? 'status-completed' : 'status-pending';
+                    const fecha = new Date(pedido.fecha || pedido.createdAt).toLocaleDateString('es-PE');
+                    
+                    const el = document.createElement('div');
+                    el.className = 'order-item';
+                    el.innerHTML = `
+                        <div class="order-info">
+                            <h4>#${pedido.id} - ${fecha}</h4>
+                            <p>${pedido.descripcion || 'Pedido realizado'}</p>
+                            <p>Total: S/. ${pedido.total || pedido.monto || 0}</p>
+                        </div>
+                        <div class="order-status ${statusClass}">${statusText}</div>
+                    `;
+                    ordersList.appendChild(el);
+                });
+            }
+        }
+
+        // Cerrar sesión
+        function cerrarSesion() {
+            localStorage.removeItem('sc_session');
+            localStorage.removeItem('sc_token');
+            localStorage.removeItem('sc_refresh_token');
+            localStorage.removeItem('sc_device_token');
+            sessionStorage.removeItem('sc_user_role');
+            sessionStorage.removeItem('sc_user_id');
+            sessionStorage.removeItem('sc_user_name');
+            window.location.href = 'login.html';
+        }
+
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', async () => {
+            const sesion = verificarSesion();
+            if (sesion) {
+                cargarPerfil(sesion);
+                await cargarPuntos();
+                await cargarPromociones();
+                await cargarPedidos();
+            }
+
+            // Event listeners para cerrar sesión
+            const logoutBtns = document.querySelectorAll('#logoutBtn, #logoutBtnHeader');
+            logoutBtns.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    cerrarSesion();
+                });
+            });
+        });
+    </script>
+
+</body>
+
+</html>
