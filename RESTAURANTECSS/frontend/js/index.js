@@ -232,26 +232,21 @@
     /* ---- Respuestas automáticas del bot ---- */
     const BOT_RESPONSES = {
         defaults: [
-            '¡Hola! 😊 ¿En qué te puedo ayudar hoy?',
-            'Estamos aquí para atenderte. ¿Tienes alguna consulta sobre nuestra carta o reservas?',
+            'No entendí 🤔',
         ],
         keywords: [
-            { words: ['hola', 'buenos', 'buenas', 'saludos'],
-              reply: '¡Hola! Bienvenido/a a Sabor Casero. ¿Qué deseas saber? 🍽️' },
-            { words: ['horario', 'hora', 'abierto', 'cierra', 'abre'],
+            { words: ['comando','comandos'],
+              reply: 'LISTA DE COMANDOS: <br> 1-Menu <br> 2-Horario de atencion <br> 3-Delivery <br> 4-Reservas <br> 5-Dirección 🍽️' },
+            { words: ['2','horario'],
               reply: '🕒 Estamos abiertos de **Lunes a Domingo de 11:00 am a 10:30 pm**. ¡Te esperamos!' },
-            { words: ['reserva', 'mesa', 'reservar'],
+            { words: ['reservas','4'],
               reply: '📅 Puedes hacer tu reserva en nuestra sección "Reservaciones" o llamarnos al 449 135.' },
-            { words: ['carta', 'menu', 'menú', 'plato', 'platillo', 'comida'],
+            { words: ['menu','1'],
               reply: '🍽️ ¡Tenemos una variedad deliciosa de platos tradicionales! Consulta nuestra carta en el enlace del menú principal.' },
-            { words: ['precio', 'costo', 'cuánto', 'cuanto', 'cobran'],
-              reply: '💰 Los precios varían según el plato. Visita nuestra carta para ver los detalles. ¡Tenemos opciones para todos!' },
-            { words: ['delivery', 'domicilio', 'envío', 'envio', 'pedido'],
+            { words: ['delivery','3'],
               reply: '🚚 Sí, tenemos servicio de delivery en Sicuani. Llama al **+51 973 555 214** para hacer tu pedido.' },
-            { words: ['dirección', 'direccion', 'ubicación', 'ubicacion', 'donde', 'dónde'],
+            { words: ['dirección','5'],
               reply: '📍 Nos encontramos en **Av. Garcilaso 325, Sicuani, Cusco, Perú**. ¡Usa el botón de mapa para guiarte!' },
-            { words: ['evento', 'eventos', 'reunion', 'reunión', 'celebración', 'celebracion'],
-              reply: '🎉 ¡Organizamos eventos y reuniones! Escríbenos a eventos@saborcasero.pe o llama al +51 973 555 214.' },
             { words: ['gracias', 'thanks', 'ok', 'listo', 'perfecto'],
               reply: '😊 ¡Con mucho gusto! Si tienes otra consulta, aquí estoy. ¡Que tengas un gran día!' },
         ],
@@ -323,7 +318,7 @@
         if (isOpen && msgList.children.length === 0) {
             // Mensaje de bienvenida
             setTimeout(() => {
-                appendMsg('¡Hola! 👋 Bienvenido a **Sabor Casero**. ¿En qué te podemos ayudar hoy?', 'bot');
+                appendMsg('¡Hola! 👋 Bienvenido a **Sabor Casero**. Escriba la palabra "Comando", para ver la lista de comnados', 'bot');
             }, 300);
         }
 

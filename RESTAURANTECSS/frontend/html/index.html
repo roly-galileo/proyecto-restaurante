@@ -74,8 +74,7 @@
                     <li role="none"><a href="carta.html" role="menuitem">Historia</a></li>
                     <li role="none"><a href="carta.html" role="menuitem">Contacto</a></li>
                     <li role="none"><a href="reservas.html" class="reserva-btn" role="menuitem">Reservaciones</a></li>
-                    <li role="none"><a href="admin.html" class="reserva-btn" role="menuitem">Iniciar Sesión</a></li>
-                    <li role="none"><a href="login.html" class="login-btn" role="menuitem">Crear Cuenta</a></li>
+                    <li role="none"><a href="login.html" class="login-btn" role="menuitem">🔐 Mi Cuenta</a></li>
                 </ul>
             </div>
             <div class="menu-overlay" id="menuOverlay"></div>
@@ -102,6 +101,21 @@
             </div>
         </section>
 
+        <!-- ================= SECCIÓN CTA: LOGIN ================= -->
+        <section class="cta-auth section-reveal" style="padding: 60px 20px; background: linear-gradient(135deg, rgba(212, 165, 116, 0.1) 0%, rgba(212, 165, 116, 0.05) 100%); text-align: center;">
+            <div style="max-width: 800px; margin: 0 auto;">
+                <h2 style="font-size: 32px; margin-bottom: 15px; color: #2a2a2a; font-family: 'Playfair Display', serif;">Accede a Tu Cuenta</h2>
+                <p style="font-size: 16px; color: #666; margin-bottom: 40px; line-height: 1.6;">
+                    Inicia sesión para gestionar tus pedidos, ver tu historial de compras y acceder a tu programa de puntos de lealtad.
+                </p>
+                <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+                    <a href="login.html" class="btn-primary" style="padding: 14px 40px; border-radius: 30px; text-decoration: none; font-weight: 600; transition: all 0.3s ease; display: inline-block; font-size: 16px;">
+                        🔐 Inicia o Crea tu Cuenta
+                    </a>
+                </div>
+            </div>
+        </section>
+
         <!-- ================= SECCIÓN DE PROMOCIONES ================= -->
         <section class="seccion-destacada-promos section-reveal" id="promos">
             <div class="seccion-header">
@@ -118,9 +132,9 @@
             <div class="carrusel-container">
                 <button class="carrusel-btn prev" data-target="promos-carrusel" aria-label="Anterior">&#8249;</button>
                 <div class="carrusel" id="promos-carrusel">
-                    <img src="img/promos1.png" class="slide active" alt="Promoción 1">
-                    <img src="img/promos2.jpg" class="slide" alt="Promoción 2">
-                    <img src="img/promos3.jpg" class="slide" alt="Promoción 3">
+                    <img src="../img/promos1.png" class="slide active" alt="Promoción 1">
+                    <img src="../img/promos2.jpg" class="slide" alt="Promoción 2">
+                    <img src="../img/promos2.jpg" class="slide" alt="Promoción 3">
                 </div>
                 <button class="carrusel-btn next" data-target="promos-carrusel" aria-label="Siguiente">&#8250;</button>
                 <div class="carrusel-dots" id="dotsPromos"></div>
@@ -143,9 +157,9 @@
             <div class="carrusel-container">
                 <button class="carrusel-btn prev" data-target="platos-carrusel" aria-label="Anterior">&#8249;</button>
                 <div class="carrusel" id="platos-carrusel">
-                    <img src="img/lomo.jpg" class="slide active" alt="Lomo Saltado">
-                    <img src="img/aji.jpg" class="slide" alt="Ají de Gallina">
-                    <img src="img/causa.jpg" class="slide" alt="Arroz con Pollo">
+                    <img src="../img/lomo.jpg" class="slide active" alt="Lomo Saltado">
+                    <img src="../img/aji.jpg" class="slide" alt="Ají de Gallina">
+                    <img src="../img/causa.jpg" class="slide" alt="Arroz con Pollo">
                 </div>
                 <button class="carrusel-btn next" data-target="platos-carrusel" aria-label="Siguiente">&#8250;</button>
                 <div class="carrusel-dots" id="dotsPlatos"></div>
@@ -168,21 +182,146 @@
             <div class="carrusel-container">
                 <button class="carrusel-btn prev" data-target="trab-carrusel" aria-label="Anterior">&#8249;</button>
                 <div class="carrusel" id="trab-carrusel">
-                    <img src="img/trabajadores1.jpg" class="slide active" alt="Equipo 1">
-                    <img src="img/trabajadores2.jpg" class="slide" alt="Equipo 2">
-                    <img src="img/trabajadores3.jpg" class="slide" alt="Equipo 3">
+                    <img src="../img/trabajadores1.jpg" class="slide active" alt="Equipo 1">
+                    <img src="../img/trabajadores2.jpg" class="slide" alt="Equipo 2">
+                    <img src="../img/trabajadores3.jpg" class="slide" alt="Equipo 3">
                 </div>
                 <button class="carrusel-btn next" data-target="trab-carrusel" aria-label="Siguiente">&#8250;</button>
                 <div class="carrusel-dots" id="dotsTrab"></div>
             </div>
         </section>
 
-        <!-- ================= BOTONES FLOTANTES ================= -->
+        <!-- ================= BOTONES FLOTANTES MEJORADOS ================= -->
+        <style>
+            .floating-buttons-container {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                z-index: 999;
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+                align-items: flex-end;
+            }
 
-        <!-- Botón de promociones -->
-        <div id="promociones-boton" class="floating-btn promo-btn" title="Ver promociones" role="button" tabindex="0">
-            <span class="btn-icon">🥳</span>
-            <span class="btn-text">Promos</span>
+            .floating-btn {
+                width: 60px;
+                height: 60px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                font-size: 28px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+                transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+                position: relative;
+                border: none;
+                background: white;
+                overflow: hidden;
+            }
+
+            .floating-btn::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+                transition: left 0.5s;
+            }
+
+            .floating-btn:hover::before {
+                left: 100%;
+            }
+
+            .floating-btn:hover {
+                transform: scale(1.15) translateX(-10px);
+                box-shadow: 0 8px 20px rgba(139, 69, 19, 0.35);
+            }
+
+            .floating-btn:active {
+                transform: scale(0.95);
+            }
+
+            .floating-btn.promo-btn {
+                background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            }
+
+            .floating-btn.map-btn {
+                background: linear-gradient(135deg, #FF6B6B 0%, #FF4757 100%);
+            }
+
+            .floating-btn.chat-btn {
+                background: linear-gradient(135deg, #8B4513 0%, #D2691E 100%);
+                width: 70px;
+                height: 70px;
+                font-size: 32px;
+                box-shadow: 0 6px 20px rgba(139, 69, 19, 0.4);
+            }
+
+            .floating-btn.chat-btn:hover {
+                transform: scale(1.2) translateX(-15px) rotate(10deg);
+            }
+
+            .floating-btn-label {
+                position: absolute;
+                right: 80px;
+                background: rgba(0, 0, 0, 0.85);
+                color: white;
+                padding: 8px 12px;
+                border-radius: 20px;
+                white-space: nowrap;
+                font-size: 12px;
+                font-weight: 600;
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.3s;
+            }
+
+            .floating-btn:hover .floating-btn-label {
+                opacity: 1;
+            }
+
+            @media (max-width: 640px) {
+                .floating-buttons-container {
+                    bottom: 15px;
+                    right: 15px;
+                    gap: 10px;
+                }
+
+                .floating-btn {
+                    width: 55px;
+                    height: 55px;
+                    font-size: 24px;
+                }
+
+                .floating-btn.chat-btn {
+                    width: 65px;
+                    height: 65px;
+                }
+            }
+        </style>
+
+        <div class="floating-buttons-container">
+            <!-- Botón de promociones -->
+            <div id="promociones-boton" class="floating-btn promo-btn" title="Ver promociones" role="button" tabindex="0">
+                🥳
+                <span class="floating-btn-label">Promociones</span>
+            </div>
+
+            <!-- Botón de mapa -->
+            <div id="mapa-boton" class="floating-btn map-btn" title="Ver ubicación" role="button" tabindex="0">
+                📍
+                <span class="floating-btn-label">Ubicación</span>
+            </div>
+
+            <!-- Botón del chatbot -->
+            <div id="chat-icon" class="floating-btn chat-btn" onclick="toggleChat()" title="Chat con nosotros" role="button" tabindex="0" aria-expanded="false">
+                💬
+                <span class="floating-btn-label">Chat</span>
+            </div>
         </div>
 
         <!-- Ventana de promociones -->
@@ -194,12 +333,6 @@
             <div class="window-body">
                 <iframe src="promos.html" width="100%" height="300" style="border:0; border-radius:8px;" loading="lazy" title="Promociones"></iframe>
             </div>
-        </div>
-
-        <!-- Botón de mapa -->
-        <div id="mapa-boton" class="floating-btn map-btn" title="Ver ubicación" role="button" tabindex="0">
-            <span class="btn-icon">📍</span>
-            <span class="btn-text">Mapa</span>
         </div>
 
         <!-- Ventana del mapa -->
@@ -214,12 +347,6 @@
                     width="100%" height="300" style="border:0; border-radius:8px;" loading="lazy" title="Mapa">
                 </iframe>
             </div>
-        </div>
-
-        <!-- Botón del chatbot -->
-        <div id="chat-icon" class="floating-btn chat-btn" onclick="toggleChat()" title="Chat con nosotros" role="button" tabindex="0" aria-expanded="false">
-            <span class="btn-icon">💬</span>
-            <span class="btn-text">Chat</span>
         </div>
 
         <!-- Ventana del chat -->

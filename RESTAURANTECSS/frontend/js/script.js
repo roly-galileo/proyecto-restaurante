@@ -80,7 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ===================================================== */
     try {
       const response = await fetch(
-        "http://192.168.1.80:3000/api/reservaciones",
+        "http://192.168.1.80:3000/api/reservas",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
