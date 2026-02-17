@@ -605,7 +605,7 @@ form {
 /* ===================================================
    COLUMNA VISUAL
 =================================================== */
-.res-visual-col { }
+.res-visual-col
 
 .visual-sticky {
     position: sticky;
